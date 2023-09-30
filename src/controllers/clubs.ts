@@ -7,16 +7,16 @@ import { ImagesEnum } from '../enum/imagesEnum';
 import { addPrefixUrl } from '../utils/handleImageUrl';
 import models from '../models/index';
 
-async function getLeagues(_req: Request, res: Response) {
+async function getClubs(_req: Request, res: Response) {
   try {
-    const leagues = await models.leagues.find({});
+    const leagues = await models.clubs.find({});
     res.send(leagues);
   } catch (error) {
-    handleHttpError(res, 'Cannot get leagues');
+    handleHttpError(res, 'Cannot get clubs');
   }
 }
 
-async function uploadLeagueImage(req: Request, res: Response) {
+async function uploadClubImage(req: Request, res: Response) {
   try {
     const { file } = req;
     const response = await gcpImageUpload(file!, ImagesEnum.LEAGUE);
@@ -32,41 +32,41 @@ async function uploadLeagueImage(req: Request, res: Response) {
   }
 }
 
-async function createLeague(req: Request, res: Response) {
+async function createClub(req: Request, res: Response) {
   const { body } = req;
   try {
-    const newleague = await models.leagues.create(body);
+    const newleague = await models.clubs.create(body);
     res.send(newleague);
   } catch (error) {
-    handleHttpError(res, 'Cannot create leagues');
+    handleHttpError(res, 'Cannot create club');
   }
 }
 
-async function updateLeague(req: Request, res: Response) {
+async function updateClub(req: Request, res: Response) {
   try {
     const { id, ...body } = matchedData(req);
-    await models.leagues.findByIdAndUpdate(id, body);
+    await models.clubs.findByIdAndUpdate(id, body);
     res.send({
-      message: 'League updated'
+      message: 'Club updated'
     });
   } catch (error) {
-    handleHttpError(res, 'Cannot update league');
+    handleHttpError(res, 'Cannot update club');
   }
 }
 
-async function deleteLeague(req: Request, res: Response) {
+async function deleteClub(req: Request, res: Response) {
   try {
-    await models.leagues.findOneAndDelete({ _id: req.params.id });
-    res.send({ message: 'League deleted successfully' });
+    await models.clubs.findOneAndDelete({ _id: req.params.id });
+    res.send({ message: 'Club deleted successfully' });
   } catch (error) {
-    handleHttpError(res, 'Cannot delete league');
+    handleHttpError(res, 'Cannot delete club');
   }
 }
 
 export {
-  getLeagues,
-  createLeague,
-  updateLeague,
-  deleteLeague,
-  uploadLeagueImage
+  getClubs,
+  createClub,
+  updateClub,
+  deleteClub,
+  uploadClubImage
 };
