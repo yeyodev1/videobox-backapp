@@ -2,12 +2,12 @@ import { NextFunction, Request, Response } from 'express';
 import { check } from 'express-validator';
 import validateResults from '../utils/handleValidator';
 
-const leagueValidatorCreate = [
+const clubValidatorCreate = [
   check('name')
     .notEmpty()
     .isString()
     .withMessage('Name is required')
-    .isLength({ max: 20 })
+    .isLength({ max: 40 })
     .withMessage('Max Length 20 characters'),
 
   check('image')
@@ -26,14 +26,14 @@ const leagueValidatorCreate = [
   }
 ];
 
-const leagueValidatorUpdate = [
+const clubValidatorUpdate = [
   check('id').exists().notEmpty().isMongoId(),
 
   check('name')
     .notEmpty()
     .isString()
     .withMessage('Name is required')
-    .isLength({ max: 20 })
+    .isLength({ max: 40 })
     .withMessage('Max Length 20 characters'),
 
   check('image')
@@ -52,11 +52,11 @@ const leagueValidatorUpdate = [
   }
 ];
 
-const leagueValidatorDelete = [
+const clubValidatorDelete = [
   check('id').exists().notEmpty().isMongoId(),
   (req: Request, res: Response, next: NextFunction) => {
     return validateResults(req, res, next);
   }
 ];
 
-export { leagueValidatorCreate, leagueValidatorUpdate, leagueValidatorDelete };
+export { clubValidatorCreate, clubValidatorUpdate, clubValidatorDelete };
