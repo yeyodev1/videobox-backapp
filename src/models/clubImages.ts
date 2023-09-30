@@ -1,6 +1,6 @@
 import mongoose, { Schema } from 'mongoose';
 
-const leagueImagesSchema: Schema = new mongoose.Schema(
+const clubImagesSchema: Schema = new mongoose.Schema(
   {
     name: {
       type: String
@@ -15,4 +15,4 @@ const leagueImagesSchema: Schema = new mongoose.Schema(
   }
 );
 
-export default mongoose.model('leagueImages', leagueImagesSchema);
+export default mongoose.model('clubImages', clubImagesSchema);
