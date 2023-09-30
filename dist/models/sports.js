@@ -20,26 +20,26 @@ sportsSchema.statics.findAllData = function () {
     return this.aggregate([
         {
             $lookup: {
-                from: 'leagues',
+                from: 'club',
                 localField: '_id',
                 foreignField: 'sport',
-                as: 'leaguesDetails'
+                as: 'fieldsDetails'
             }
         }
     ]);
 };
-// Agrega un método personalizado para buscar un solo deporte con sus ligas relacionadas
-sportsSchema.statics.findOneWithLeagues = function (sportId) {
+// Agrega un método personalizado para buscar un solo deporte con sus canchas relacionadas
+sportsSchema.statics.findOneWithSports = function (sportId) {
     return this.aggregate([
         {
             $match: { _id: new mongoose_1.default.Types.ObjectId(sportId) } // Convierte el ID en un ObjectId
         },
         {
             $lookup: {
-                from: 'leagues',
+                from: 'clubs',
                 localField: '_id',
                 foreignField: 'sport',
-                as: 'leaguesDetails'
+                as: 'fieldsDetails'
             }
         }
     ]);

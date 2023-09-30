@@ -5,6 +5,6 @@ var ImagesEnum;
 (function (ImagesEnum) {
     ImagesEnum["SPORT"] = "sport";
     ImagesEnum["PLAN"] = "plan";
-    ImagesEnum["LEAGUE"] = "league";
+    ImagesEnum["CLUB"] = "league";
     ImagesEnum["USER"] = "user";
 })(ImagesEnum || (exports.ImagesEnum = ImagesEnum = {}));

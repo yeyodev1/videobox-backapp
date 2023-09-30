@@ -48,7 +48,7 @@ async function main() {
     (0, routes_1.default)(app);
     // sendVerification();
     app.get('/', (_req, res) => {
-        res.send('Predix is online');
+        res.send('Videobox is aliveeee! (╯°□°）╯');
     });
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);

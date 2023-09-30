@@ -3,15 +3,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.leagueValidatorDelete = exports.leagueValidatorUpdate = exports.leagueValidatorCreate = void 0;
+exports.clubValidatorDelete = exports.clubValidatorUpdate = exports.clubValidatorCreate = void 0;
 const express_validator_1 = require("express-validator");
 const handleValidator_1 = __importDefault(require("../utils/handleValidator"));
-const leagueValidatorCreate = [
+const clubValidatorCreate = [
     (0, express_validator_1.check)('name')
         .notEmpty()
         .isString()
         .withMessage('Name is required')
-        .isLength({ max: 20 })
+        .isLength({ max: 40 })
         .withMessage('Max Length 20 characters'),
     (0, express_validator_1.check)('image')
         .notEmpty()
@@ -26,14 +26,14 @@ const leagueValidatorCreate = [
         return (0, handleValidator_1.default)(req, res, next);
     }
 ];
-exports.leagueValidatorCreate = leagueValidatorCreate;
-const leagueValidatorUpdate = [
+exports.clubValidatorCreate = clubValidatorCreate;
+const clubValidatorUpdate = [
     (0, express_validator_1.check)('id').exists().notEmpty().isMongoId(),
     (0, express_validator_1.check)('name')
         .notEmpty()
         .isString()
         .withMessage('Name is required')
-        .isLength({ max: 20 })
+        .isLength({ max: 40 })
         .withMessage('Max Length 20 characters'),
     (0, express_validator_1.check)('image')
         .notEmpty()
@@ -48,11 +48,11 @@ const leagueValidatorUpdate = [
         return (0, handleValidator_1.default)(req, res, next);
     }
 ];
-exports.leagueValidatorUpdate = leagueValidatorUpdate;
-const leagueValidatorDelete = [
+exports.clubValidatorUpdate = clubValidatorUpdate;
+const clubValidatorDelete = [
     (0, express_validator_1.check)('id').exists().notEmpty().isMongoId(),
     (req, res, next) => {
         return (0, handleValidator_1.default)(req, res, next);
     }
 ];
-exports.leagueValidatorDelete = leagueValidatorDelete;
+exports.clubValidatorDelete = clubValidatorDelete;
