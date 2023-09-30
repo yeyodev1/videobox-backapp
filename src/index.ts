@@ -32,7 +32,7 @@ async function main() {
   // sendVerification();
 
   app.get('/', (_req, res) => {
-    res.send('Predix is online');
+    res.send('Videobox is aliveeee! (╯°□°）╯');
   });
 
   app.listen(port, () => {
