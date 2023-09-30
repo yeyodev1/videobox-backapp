@@ -16,11 +16,11 @@ import {
 
 const router = express.Router();
 
-router.get('/club', getClubs);
+router.get('/clubs', getClubs);
 
-// TODO: endpoint to upload image to GCP before create league on POST METHOD
+// TODO: endpoint to upload image to GCP before create Club on POST METHOD
 router.post(
-  '/leagueImage',
+  '/clubImage',
   uploadMiddleware.single('clubImage'),
   uploadClubImage
 );
