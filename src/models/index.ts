@@ -3,7 +3,7 @@ import plans from './plans';
 import planImages from './planImages';
 import clubs from './clubs';
 import sportImages from './sportImages';
-import leagueImages from './leagueImages';
+import clubImages from './clubImages';
 import bets from './bets';
 import users from './users';
 import userImages from './userImages';
@@ -14,7 +14,7 @@ const models = {
   clubs,
   planImages,
   sportImages,
-  leagueImages,
+  clubImages,
   bets,
   users,
   userImages
