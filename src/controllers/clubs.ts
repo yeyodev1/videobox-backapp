@@ -9,8 +9,8 @@ import models from '../models/index';
 
 async function getClubs(_req: Request, res: Response) {
   try {
-    const leagues = await models.clubs.find({});
-    res.send(leagues);
+    const clubs = await models.clubs.find({});
+    res.send(clubs);
   } catch (error) {
     handleHttpError(res, 'Cannot get clubs');
   }
@@ -19,13 +19,13 @@ async function getClubs(_req: Request, res: Response) {
 async function uploadClubImage(req: Request, res: Response) {
   try {
     const { file } = req;
-    const response = await gcpImageUpload(file!, ImagesEnum.LEAGUE);
-    const result = addPrefixUrl(response, ImagesEnum.LEAGUE);
+    const response = await gcpImageUpload(file!, ImagesEnum.CLUB);
+    const result = addPrefixUrl(response, ImagesEnum.CLUB);
     const fileData = {
       url: result,
       filename: result.split('/')[2]
     };
-    const data = await models.leagueImages.create(fileData);
+    const data = await models.clubImages.create(fileData);
     res.send({ data });
   } catch (error) {
     handleHttpError(res, 'Error uploading file');
