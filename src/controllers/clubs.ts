@@ -35,8 +35,9 @@ async function uploadClubImage(req: Request, res: Response) {
 async function createClub(req: Request, res: Response) {
   const { body } = req;
   try {
-    const newleague = await models.clubs.create(body);
-    res.send(newleague);
+    const newClub = await models.clubs.create(body);
+    res.send(newClub);
+    console.log(newClub)
   } catch (error) {
     handleHttpError(res, 'Cannot create club');
   }
