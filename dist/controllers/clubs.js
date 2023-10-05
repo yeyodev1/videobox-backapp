@@ -40,8 +40,9 @@ exports.uploadClubImage = uploadClubImage;
 async function createClub(req, res) {
     const { body } = req;
     try {
-        const newleague = await index_1.default.clubs.create(body);
-        res.send(newleague);
+        const newClub = await index_1.default.clubs.create(body);
+        res.send(newClub);
+        console.log(newClub);
     }
     catch (error) {
         (0, handleErrors_1.default)(res, 'Cannot create club');

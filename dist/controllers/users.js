@@ -69,9 +69,7 @@ async function getUser(req, res) {
             birthdate: user === null || user === void 0 ? void 0 : user.birthdate,
             twitter: user === null || user === void 0 ? void 0 : user.twitter,
             instagram: user === null || user === void 0 ? void 0 : user.instagram,
-            susbcriptionStatus: user === null || user === void 0 ? void 0 : user.subscriptionStatus,
-            subscriptionExpirationDate: user === null || user === void 0 ? void 0 : user.subscriptionExpirationDate,
-            emailVerified: user.emailVerified
+            isPaid: user === null || user === void 0 ? void 0 : user.isPaid,
         };
         res.send({ data });
     }

@@ -11,7 +11,6 @@ const index_1 = __importDefault(require("../models/index"));
 const handleJwt_1 = require("../middlewares/handleJwt");
 const handleJwt_2 = require("../utils/handleJwt");
 const sendGrid_1 = require("../services/sendGrid");
-const EmailVerification_1 = require("../emails/EmailVerification");
 const PasswordRecovery_1 = require("../emails/PasswordRecovery");
 const PasswordRecoveryNotification_1 = require("../emails/PasswordRecoveryNotification");
 const JWT_SECRET = process.env.JWT_SECRET;
@@ -32,14 +31,11 @@ async function createAuthRegisterController(req, res) {
             role,
             _id
         };
-        const link = `https://predix.ec/email-verified/${data.token}`;
-        const verificationBody = (0, EmailVerification_1.generateEmailVerificationTemplate)(link);
-        (0, sendGrid_1.sendEmail)(email, 'EMAIL DE VERIFICACIÓN', verificationBody);
         res.send({ data });
     }
     catch (error) {
-        console.error(error);
-        (0, handleErrors_1.default)(res, 'Cannot create user', 401);
+        console.error('Error Details:', error);
+        (0, handleErrors_1.default)(res, `Cannot create user: ${error}`, 401);
     }
 }
 exports.createAuthRegisterController = createAuthRegisterController;
@@ -75,9 +71,7 @@ async function authLoginController(req, res) {
             birthdate: userData === null || userData === void 0 ? void 0 : userData.birthdate,
             twitter: userData === null || userData === void 0 ? void 0 : userData.twitter,
             instagram: userData === null || userData === void 0 ? void 0 : userData.instagram,
-            susbcriptionStatus: userData === null || userData === void 0 ? void 0 : userData.subscriptionStatus,
-            subscriptionExpirationDate: userData === null || userData === void 0 ? void 0 : userData.subscriptionExpirationDate,
-            emailVerified: userData === null || userData === void 0 ? void 0 : userData.emailVerified
+            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid,
         };
         res.send({ data });
     }
