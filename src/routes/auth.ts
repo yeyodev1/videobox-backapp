@@ -5,12 +5,10 @@ import {
   authValidatorRegister,
   authValidatorlogin,
   authUpdatePassword,
-  authEmailVerificationValidator
 } from '../validators/auth';
 import {
   createAuthRegisterController,
   authLoginController,
-  emailVerificationController,
   passwordRecoveryRequestController,
   updatePasswordAndNotify
 } from '../controllers/auth';
@@ -25,12 +23,6 @@ router.post(
 
 router.post('/auth/login', authValidatorlogin, authLoginController);
 
-// TODO: verify email
-router.patch(
-  '/auth/email-verification',
-  authEmailVerificationValidator,
-  emailVerificationController
-);
 
 // TODO: set password recovery request
 router.post(
@@ -43,7 +35,6 @@ router.post(
 router.patch(
   '/auth/password-recovery',
   authUpdatePassword,
-  authEmailVerificationValidator,
   updatePasswordAndNotify
 );
 
