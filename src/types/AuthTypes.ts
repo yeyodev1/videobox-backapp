@@ -11,7 +11,5 @@ export type UserType = {
   birthdate: string;
   twitter: string | null;
   instagram: string | null;
-  subscriptionStatus: boolean;
-  subscriptionExpirationDate: string | null;
-  emailVerified: boolean;
+  isPaid: boolean;
 };

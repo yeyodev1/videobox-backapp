@@ -65,9 +65,7 @@ async function getUser(req: Request, res: Response) {
       birthdate: user?.birthdate,
       twitter: user?.twitter,
       instagram: user?.instagram,
-      susbcriptionStatus: user?.subscriptionStatus,
-      subscriptionExpirationDate: user?.subscriptionExpirationDate,
-      emailVerified: user.emailVerified
+      isPaid: user?.isPaid,
     };
 
     res.send({ data });

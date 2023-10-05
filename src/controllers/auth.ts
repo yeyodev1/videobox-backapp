@@ -8,7 +8,6 @@ import { encrypt, compare } from '../middlewares/handleJwt';
 import { UserType } from '../types/AuthTypes';
 import { tokenSign } from '../utils/handleJwt';
 import { sendEmail } from '../services/sendGrid';
-import { generateEmailVerificationTemplate } from '../emails/EmailVerification';
 import { generatePasswordRecoveryTemplate } from '../emails/PasswordRecovery';
 import { generatePasswordRecoveryNotificationTemplate } from '../emails/PasswordRecoveryNotification';
 
@@ -34,15 +33,10 @@ async function createAuthRegisterController(req: Request, res: Response) {
       _id
     };
 
-    const link = `https://predix.ec/email-verified/${data.token}`;
-
-    const verificationBody = generateEmailVerificationTemplate(link);
-
-    sendEmail(email, 'EMAIL DE VERIFICACIÓN', verificationBody);
     res.send({ data });
   } catch (error) {
-    console.error(error);
-    handleHttpError(res, 'Cannot create user', 401);
+    console.error('Error Details:', error);
+    handleHttpError(res, `Cannot create user: ${error}`, 401);
   }
 }
 
@@ -83,9 +77,7 @@ async function authLoginController(req: Request, res: Response) {
       birthdate: userData?.birthdate,
       twitter: userData?.twitter,
       instagram: userData?.instagram,
-      susbcriptionStatus: userData?.subscriptionStatus,
-      subscriptionExpirationDate: userData?.subscriptionExpirationDate,
-      emailVerified: userData?.emailVerified
+      isPaid: userData?.isPaid,
     };
 
     res.send({ data });

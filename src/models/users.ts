@@ -12,11 +12,6 @@ const usersSchema: Schema = new mongoose.Schema(
       default: null
     },
 
-    emailVerified: {
-      type: Boolean,
-      default: false
-    },
-
     userImage: {
       type: String,
       default: null
@@ -57,16 +52,11 @@ const usersSchema: Schema = new mongoose.Schema(
       required: true,
       select: false
     },
-
-    subscriptionStatus: {
+    
+    isPaid: {
       type: Boolean,
       default: false
     },
-
-    subscriptionExpirationDate: {
-      type: Date,
-      default: null
-    }
   },
   {
     timestamps: true,
