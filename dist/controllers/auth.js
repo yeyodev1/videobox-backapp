@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.passwordRecoveryRequestController = exports.updatePasswordAndNotify = exports.emailVerificationController = exports.authLoginController = exports.createAuthRegisterController = void 0;
+exports.passwordRecoveryRequestController = exports.updatePasswordAndNotify = exports.authLoginController = exports.createAuthRegisterController = void 0;
 const express_validator_1 = require("express-validator");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
@@ -80,30 +80,6 @@ async function authLoginController(req, res) {
     }
 }
 exports.authLoginController = authLoginController;
-async function emailVerificationController(req, res) {
-    try {
-        const decodedToken = jsonwebtoken_1.default.verify(req.body.id, JWT_SECRET);
-        if (!(decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken._id)) {
-            (0, handleErrors_1.default)(res, 'CANNOT GET ID', 402);
-        }
-        const id = decodedToken === null || decodedToken === void 0 ? void 0 : decodedToken._id;
-        const user = await index_1.default.users.findById(id);
-        if (!user) {
-            (0, handleErrors_1.default)(res, 'User do not exist', 402);
-            return;
-        }
-        await index_1.default.users.findByIdAndUpdate(id, {
-            $set: {
-                emailVerified: true
-            }
-        });
-        res.send({ message: 'User verified' });
-    }
-    catch (error) {
-        (0, handleErrors_1.default)(res, 'Cannot verify user', 401);
-    }
-}
-exports.emailVerificationController = emailVerificationController;
 async function passwordRecoveryRequestController(req, res) {
     try {
         const email = req.body.email;
