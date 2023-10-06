@@ -61,18 +61,9 @@ const authUpdatePassword = [
   }
 ];
 
-const authEmailVerificationValidator = [
-  check('id').exists().notEmpty(),
-
-  (req: Request, res: Response, next: NextFunction) => {
-    return validateResults(req, res, next);
-  }
-];
-
 export {
   authValidatorRegister,
   authValidatorlogin,
   authRecoverPasswordRequest,
   authUpdatePassword,
-  authEmailVerificationValidator
 };

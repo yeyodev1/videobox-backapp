@@ -29,7 +29,6 @@ async function main() {
 
   routerApi(app);
 
-  // sendVerification();
 
   app.get('/', (_req, res) => {
     res.send('Videobox is aliveeee! (╯°□°）╯');
