@@ -36,9 +36,9 @@ async function main() {
     await (0, mongo_1.default)();
     dotenv.config();
     const whiteList = [
-        'http://localhost:5173',
-        'http://127.0.0.1:5173',
-        'https://predix.ec'
+        'http://localhost:3000',
+        'http://127.0.0.1:3000',
+        'https://videobox.ec'
         // TODO: add app sandbox domain
     ];
     const app = (0, express_1.default)();
