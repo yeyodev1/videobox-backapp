@@ -46,7 +46,6 @@ async function main() {
     app.use(express_1.default.json());
     const port = process.env.PORT || 3000; // Fallback port value, change it to your preferred port
     (0, routes_1.default)(app);
-    // sendVerification();
     app.get('/', (_req, res) => {
         res.send('Videobox is aliveeee! (╯°□°）╯');
     });
