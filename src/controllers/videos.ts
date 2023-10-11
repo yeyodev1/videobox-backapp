@@ -11,7 +11,7 @@ async function getVideos(_req: Request, res: Response) {
 
     const videos = await videoManager.getDownloadLinksInFolder(folderId);
 
-    res.send(videos);
+    res.send({ data: videos });
   } catch (error) {
     handleHttpError(res, 'CANNOT_GET_VIDEOS', 403);
   }
