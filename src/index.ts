@@ -15,7 +15,8 @@ async function main() {
   const whiteList: string[] = [
     'http://localhost:3000',
     'http://127.0.0.1:3000',
-    'https://videobox.ec'
+    'https://videobox.pe',
+    'https://radiant-narwhal-d48ded.netlify.app'
     // TODO: add app sandbox domain
   ];
 
