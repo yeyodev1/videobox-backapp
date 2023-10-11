@@ -10,7 +10,7 @@ const videoManager = new gcpDriveApi_1.default();
 async function getVideos(_req, res) {
     try {
         const folderId = 'Test Media Player';
-        const videos = await videoManager.getDownloadLinksInFolder(folderId);
+        const videos = await videoManager.getDirectVideoLinksInFolder(folderId);
         res.send({ data: videos });
     }
     catch (error) {

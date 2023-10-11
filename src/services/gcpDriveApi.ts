@@ -35,7 +35,7 @@ class DriveVideoManager {
     }
   }
 
-  async getDownloadLinksInFolder(folderName: string) {
+  async getDirectVideoLinksInFolder(folderName: string) {
     try {
       // Busca la carpeta por nombre
       const folder = await this.findFolderByName(folderName);
@@ -49,15 +49,17 @@ class DriveVideoManager {
       // Obtiene los archivos de tipo video en la carpeta
       const videos = await this.drive.files.list({
         q: `'${folder.id}' in parents and mimeType contains 'video/'`,
-        fields: 'files(name,webViewLink,webContentLink)'
+        fields: 'files(name,webViewLink,webContentLink,originalFilename, id)'
       });
 
-      // Formatea los resultados y los devuelve como un array de objetos
-      return videos.data.files.map((video: any) => ({
+      // Formatea los resultados y genera enlaces directos
+      const directLinks = videos.data.files.map((video: any) => ({
         name: video.name,
-        viewLink: video.webViewLink,
-        downloadLink: video.webContentLink
+        directLink: `https://drive.google.com/uc?id=${video.id}`,
+        originalFilename: video.originalFilename,
       }));
+
+      return directLinks;
     } catch (error: any) {
       throw new Error(
         'Error al obtener los enlaces de descarga: ' + error.message

@@ -49,7 +49,7 @@ class DriveVideoManager {
             throw new Error('Error al cargar las credenciales: ' + error.message);
         }
     }
-    async getDownloadLinksInFolder(folderName) {
+    async getDirectVideoLinksInFolder(folderName) {
         try {
             // Busca la carpeta por nombre
             const folder = await this.findFolderByName(folderName);
@@ -59,14 +59,15 @@ class DriveVideoManager {
             // Obtiene los archivos de tipo video en la carpeta
             const videos = await this.drive.files.list({
                 q: `'${folder.id}' in parents and mimeType contains 'video/'`,
-                fields: 'files(name,webViewLink,webContentLink)'
+                fields: 'files(name,webViewLink,webContentLink,originalFilename, id)'
             });
-            // Formatea los resultados y los devuelve como un array de objetos
-            return videos.data.files.map((video) => ({
+            // Formatea los resultados y genera enlaces directos
+            const directLinks = videos.data.files.map((video) => ({
                 name: video.name,
-                viewLink: video.webViewLink,
-                downloadLink: video.webContentLink
+                directLink: `https://drive.google.com/uc?id=${video.id}`,
+                originalFilename: video.originalFilename,
             }));
+            return directLinks;
         }
         catch (error) {
             throw new Error('Error al obtener los enlaces de descarga: ' + error.message);
