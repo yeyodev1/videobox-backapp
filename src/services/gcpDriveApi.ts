@@ -1,5 +1,8 @@
 import { google, Auth } from 'googleapis';
 import * as fs from 'fs';
+import { promisify } from 'util';
+
+const readFileAsync = promisify(fs.readFile);
 
 class DriveVideoManager {
   private auth: Auth.GoogleAuth;
@@ -32,7 +35,7 @@ class DriveVideoManager {
     }
   }
 
-  async getVideosInFolder(folderName: string) {
+  async getDownloadLinksInFolder(folderName: string) {
     try {
       // Busca la carpeta por nombre
       const folder = await this.findFolderByName(folderName);
@@ -46,16 +49,19 @@ class DriveVideoManager {
       // Obtiene los archivos de tipo video en la carpeta
       const videos = await this.drive.files.list({
         q: `'${folder.id}' in parents and mimeType contains 'video/'`,
-        fields: 'files(name,webViewLink)'
+        fields: 'files(name,webViewLink,webContentLink)'
       });
 
       // Formatea los resultados y los devuelve como un array de objetos
       return videos.data.files.map((video: any) => ({
         name: video.name,
-        webViewLink: video.webViewLink
+        viewLink: video.webViewLink,
+        downloadLink: video.webContentLink
       }));
     } catch (error: any) {
-      throw new Error('Error al obtener los videos: ' + error.message);
+      throw new Error(
+        'Error al obtener los enlaces de descarga: ' + error.message
+      );
     }
   }
 

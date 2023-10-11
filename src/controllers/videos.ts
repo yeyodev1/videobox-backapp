@@ -9,11 +9,9 @@ async function getVideos(_req: Request, res: Response) {
   try {
     const folderId = 'Test Media Player';
 
-    const videos = await videoManager.getVideosInFolder(folderId);
+    const videos = await videoManager.getDownloadLinksInFolder(folderId);
 
-    console.log(videos);
-
-    res.send('hola');
+    res.send(videos);
   } catch (error) {
     handleHttpError(res, 'CANNOT_GET_VIDEOS', 403);
   }

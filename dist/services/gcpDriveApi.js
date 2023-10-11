@@ -25,6 +25,8 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const googleapis_1 = require("googleapis");
 const fs = __importStar(require("fs"));
+const util_1 = require("util");
+const readFileAsync = (0, util_1.promisify)(fs.readFile);
 class DriveVideoManager {
     constructor() {
         // Carga las credenciales desde el archivo JSON en la raíz del proyecto
@@ -47,7 +49,7 @@ class DriveVideoManager {
             throw new Error('Error al cargar las credenciales: ' + error.message);
         }
     }
-    async getVideosInFolder(folderName) {
+    async getDownloadLinksInFolder(folderName) {
         try {
             // Busca la carpeta por nombre
             const folder = await this.findFolderByName(folderName);
@@ -57,16 +59,17 @@ class DriveVideoManager {
             // Obtiene los archivos de tipo video en la carpeta
             const videos = await this.drive.files.list({
                 q: `'${folder.id}' in parents and mimeType contains 'video/'`,
-                fields: 'files(name,webViewLink)'
+                fields: 'files(name,webViewLink,webContentLink)'
             });
             // Formatea los resultados y los devuelve como un array de objetos
             return videos.data.files.map((video) => ({
                 name: video.name,
-                webViewLink: video.webViewLink
+                viewLink: video.webViewLink,
+                downloadLink: video.webContentLink
             }));
         }
         catch (error) {
-            throw new Error('Error al obtener los videos: ' + error.message);
+            throw new Error('Error al obtener los enlaces de descarga: ' + error.message);
         }
     }
     async findFolderByName(folderName) {
