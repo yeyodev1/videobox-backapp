@@ -37,7 +37,6 @@ async function createClub(req: Request, res: Response) {
   try {
     const newClub = await models.clubs.create(body);
     res.send(newClub);
-    console.log(newClub)
   } catch (error) {
     handleHttpError(res, 'Cannot create club');
   }
@@ -64,10 +63,4 @@ async function deleteClub(req: Request, res: Response) {
   }
 }
 
-export {
-  getClubs,
-  createClub,
-  updateClub,
-  deleteClub,
-  uploadClubImage
-};
+export { getClubs, createClub, updateClub, deleteClub, uploadClubImage };

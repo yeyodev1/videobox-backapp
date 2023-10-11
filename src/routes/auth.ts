@@ -4,7 +4,7 @@ import {
   authRecoverPasswordRequest,
   authValidatorRegister,
   authValidatorlogin,
-  authUpdatePassword,
+  authUpdatePassword
 } from '../validators/auth';
 import {
   createAuthRegisterController,
@@ -22,7 +22,6 @@ router.post(
 );
 
 router.post('/auth/login', authValidatorlogin, authLoginController);
-
 
 // TODO: set password recovery request
 router.post(

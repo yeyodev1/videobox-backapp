@@ -17,7 +17,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 async function createAuthRegisterController(req, res) {
     try {
         const { body } = req;
-        const email = body.email;
+        // const email = body.email;
         const encryptedPassword = await (0, handleJwt_1.encrypt)(body.password);
         const userData = { ...body, password: encryptedPassword };
         const newAuth = await index_1.default.users.create(userData);
@@ -71,7 +71,7 @@ async function authLoginController(req, res) {
             birthdate: userData === null || userData === void 0 ? void 0 : userData.birthdate,
             twitter: userData === null || userData === void 0 ? void 0 : userData.twitter,
             instagram: userData === null || userData === void 0 ? void 0 : userData.instagram,
-            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid,
+            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid
         };
         res.send({ data });
     }

@@ -52,11 +52,11 @@ const usersSchema: Schema = new mongoose.Schema(
       required: true,
       select: false
     },
-    
+
     isPaid: {
       type: Boolean,
       default: false
-    },
+    }
   },
   {
     timestamps: true,

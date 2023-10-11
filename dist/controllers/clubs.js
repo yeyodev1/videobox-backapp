@@ -42,7 +42,6 @@ async function createClub(req, res) {
     try {
         const newClub = await index_1.default.clubs.create(body);
         res.send(newClub);
-        console.log(newClub);
     }
     catch (error) {
         (0, handleErrors_1.default)(res, 'Cannot create club');

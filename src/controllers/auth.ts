@@ -16,7 +16,7 @@ const JWT_SECRET = process.env.JWT_SECRET;
 async function createAuthRegisterController(req: Request, res: Response) {
   try {
     const { body } = req;
-    const email = body.email;
+    // const email = body.email;
     const encryptedPassword = await encrypt(body.password);
     const userData = { ...body, password: encryptedPassword };
     const newAuth = await models.users.create(userData);
@@ -77,7 +77,7 @@ async function authLoginController(req: Request, res: Response) {
       birthdate: userData?.birthdate,
       twitter: userData?.twitter,
       instagram: userData?.instagram,
-      isPaid: userData?.isPaid,
+      isPaid: userData?.isPaid
     };
 
     res.send({ data });
@@ -85,8 +85,6 @@ async function authLoginController(req: Request, res: Response) {
     handleHttpError(res, 'Cannot auth user', 401);
   }
 }
-
-
 
 async function passwordRecoveryRequestController(
   req: Request,

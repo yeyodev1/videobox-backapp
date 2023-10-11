@@ -65,7 +65,7 @@ async function getUser(req: Request, res: Response) {
       birthdate: user?.birthdate,
       twitter: user?.twitter,
       instagram: user?.instagram,
-      isPaid: user?.isPaid,
+      isPaid: user?.isPaid
     };
 
     res.send({ data });

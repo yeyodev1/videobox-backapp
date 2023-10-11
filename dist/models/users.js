@@ -49,7 +49,7 @@ const usersSchema = new mongoose_1.default.Schema({
     isPaid: {
         type: Boolean,
         default: false
-    },
+    }
 }, {
     timestamps: true,
     versionKey: false
