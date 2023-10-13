@@ -5,7 +5,6 @@ import { Application } from 'express';
 
 import dbConnect from './config/mongo';
 import routerApi from './routes';
-// import { sendVerification } from './scripts/EmailVerification';
 
 async function main() {
   await dbConnect();

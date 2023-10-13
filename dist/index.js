@@ -31,7 +31,6 @@ const cors_1 = __importDefault(require("cors"));
 const dotenv = __importStar(require("dotenv"));
 const mongo_1 = __importDefault(require("./config/mongo"));
 const routes_1 = __importDefault(require("./routes"));
-// import { sendVerification } from './scripts/EmailVerification';
 async function main() {
     await (0, mongo_1.default)();
     dotenv.config();
