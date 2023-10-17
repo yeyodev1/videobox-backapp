@@ -22,15 +22,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 const googleapis_1 = require("googleapis");
 const fs = __importStar(require("fs"));
 const util_1 = require("util");
+const path_1 = __importDefault(require("path"));
 const readFileAsync = (0, util_1.promisify)(fs.readFile);
 class DriveVideoManager {
     constructor() {
+        const credentialPaths = path_1.default.join(__dirname, '../static/videobox-401504-b63bc5c2cea5.json');
         // Carga las credenciales desde el archivo JSON en la raíz del proyecto
-        const credentials = this.loadCredentials();
+        const credentials = this.loadCredentials(credentialPaths);
         // Configura la autenticación
         this.auth = new googleapis_1.google.auth.GoogleAuth({
             credentials,
@@ -39,10 +44,10 @@ class DriveVideoManager {
         // Crea una instancia de la API de Google Drive
         this.drive = googleapis_1.google.drive({ version: 'v3', auth: this.auth });
     }
-    loadCredentials() {
+    loadCredentials(credentialPaths) {
         try {
             // Carga las credenciales desde el archivo JSON en la raíz del proyecto
-            const content = fs.readFileSync('videobox-401504-b63bc5c2cea5.json', 'utf8');
+            const content = fs.readFileSync(credentialPaths, 'utf8');
             return JSON.parse(content);
         }
         catch (error) {

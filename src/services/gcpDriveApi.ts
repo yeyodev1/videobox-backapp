@@ -1,6 +1,7 @@
 import { google, Auth } from 'googleapis';
 import * as fs from 'fs';
 import { promisify } from 'util';
+import path from 'path';
 
 const readFileAsync = promisify(fs.readFile);
 
@@ -9,8 +10,12 @@ class DriveVideoManager {
   private drive: any;
 
   constructor() {
+    const credentialPaths = path.join(
+      __dirname,
+      '../static/videobox-401504-b63bc5c2cea5.json'
+    );
     // Carga las credenciales desde el archivo JSON en la raíz del proyecto
-    const credentials = this.loadCredentials();
+    const credentials = this.loadCredentials(credentialPaths);
 
     // Configura la autenticación
     this.auth = new google.auth.GoogleAuth({
@@ -22,13 +27,10 @@ class DriveVideoManager {
     this.drive = google.drive({ version: 'v3', auth: this.auth });
   }
 
-  private loadCredentials() {
+  private loadCredentials(credentialPaths: string) {
     try {
       // Carga las credenciales desde el archivo JSON en la raíz del proyecto
-      const content = fs.readFileSync(
-        'videobox-401504-b63bc5c2cea5.json',
-        'utf8'
-      );
+      const content = fs.readFileSync(credentialPaths, 'utf8');
       return JSON.parse(content);
     } catch (error: any) {
       throw new Error('Error al cargar las credenciales: ' + error.message);

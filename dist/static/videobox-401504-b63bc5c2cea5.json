@@ -1,0 +1,13 @@
+{
+    "type": "service_account",
+    "project_id": "videobox-401504",
+    "private_key_id": "b63bc5c2cea577f58b9d5aad48eb81680c1b2cb1",
+    "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCw4/b8dC/O5UWr\nSqlni1NK6sF7dZgFuX06Si2B0TDO7iOZ9Gni0qPVPAkyPbimD7zLSAo+bg02LsXJ\ndhz+84kiylEiNZX6ZiR0/dcTOJ30l9KU1ZaYSsuZyqVzN4ktctUIPFtbo4aAlThj\nH4qm/582cuF/qNx89UnLD6FLizOIP5CQRsK6K5UNCy/o6xdeWMncZsOYzfdddU1b\n7jjkHyrU7KZuhdpuDoC92E2PBwBzQHqtouhHT5Uq3vozpYrmLfSATKBRwrykeENq\nvfwtHX1yKXHR4NkPaHYieOXuooLMEMx3lMV/jdDgaOhvwHzlpCSdV3eUeGq6N31r\n3bHUTentAgMBAAECggEAGNYdNOOUXdqbrloIkJkDnCJ7gZvoeS9K2a8WFiLa1Uci\n+QgUAOy945/vE56OaUSO58To6UyW7stg6nE6z4I+uEOLYj//W53RUxrcAp8hsHjL\nsKmPoDjqPuDw241J5bd4mVQuKJ78cNviw6onU9zSzDiTmFLLiIEBODFs3nhAR0oX\nGeD+Fk5mUDbnEHBz/0TncAQFEB/nSWoZKMoh7tpnp8cffBjqYV1ek1Xiq3mleLVr\nJgqsToe9WgV0hK8zcVFOnw2MuERSwFWXXmRt+1WaHHfTe2Hx5wMp5MjMQI3A3KX4\nX1q+dlKQ81+1MbaU1elMzX4qnOgk52xrSXLW67BpOQKBgQD2Y7sQjSrk8ajVYoy7\nLT3hzk9sT2IxKtMcnMEpixjb8QyYNawwYVr+LAqny2keZ2S9+5smNogDrlKRcF89\nyWXzj/GANK9vQ0rZv942Q/o3F5iDHVt4SP9tV4wvauAk+gGEiG158/X+2v4Rw9AT\ntjUe1RFb+WP9qgoEfKHYWYX2iQKBgQC3ykQgwVDSiDMAd2aIxLmY9K9dkf4Sg+pK\n/CMdYjzip7uaXsJEgLwbuzHdZUuh3ibfAawbTxqTLut/5htrPCDbp+09WCwqpd1G\nuZqX3ex2YKIAe9oiEzqHDUWdAAxp9AF3ptgRCxL374SZRfmlYfr0ighbTKjj15od\nG9O2haD/RQKBgD3wRkdb5YuWQIYb9xravbK1JXwp3JpVlKqdsWVbJU2tJChjXbzv\nzGsW8TrLRMqy3T1xMciCbuDWAsWzBQ5IQcvfxKshE3UZ6ogg1qC3qAAPe3SCfcsY\nNrXrCz+kU2KYQqdpkHPW42FE9hfLLNS3ulTc5TdE02EiTNBh8GGt56JZAoGAClkf\nIOEBlfkJNhuC8GxzLsOIJDKWJaC7zmEH8R2Y5AIhs/1l3smIzd7qXdbYPVLuyVuk\nvxzjGCpqJBdmr9EA4J1B5FRUmEoifVrx818Rc1DZjkFq9MQ0ZWo/4ykfic+tTXld\nbQg8ly0rQB4Kgl9T6/Thp5JXaAy5pq3sa7h2aikCgYAsOBoGCGCY4747S43Q4Mqs\neKP1/E+iVnKy6MLaTpyhxCBPi90wo94/8Z200sU7nG363lZNDXwAy45eo6sa2DN4\nXpL9CCMFtVWYI2NWCf9OLv5KOKoaBgExXAHceq1YDI59EuIl01PyJ0NWv5Je3UxQ\nUk1C1hUpOb/Y/hZDyZ/9/g==\n-----END PRIVATE KEY-----\n",
+    "client_email": "videobox@videobox-401504.iam.gserviceaccount.com",
+    "client_id": "114596542692182313993",
+    "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+    "token_uri": "https://oauth2.googleapis.com/token",
+    "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+    "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/videobox%40videobox-401504.iam.gserviceaccount.com",
+    "universe_domain": "googleapis.com"
+}
