@@ -57,7 +57,7 @@ class DriveVideoManager {
       // Formatea los resultados y genera enlaces directos
       const directLinks = videos.data.files.map((video: any) => ({
         name: video.name,
-        directLink: `https://drive.google.com/uc?id=${video.id}`,
+        directLink: video.id,
         originalFilename: video.originalFilename
       }));
 
