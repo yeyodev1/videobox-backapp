@@ -41,19 +41,21 @@ async function uploadPadelVideo(req, res) {
 exports.uploadPadelVideo = uploadPadelVideo;
 async function relateUserWithVideo(req, res) {
     try {
-        const userId = req.params.userId;
+        const email = req.params.userId;
         const videoId = req.params.videoId;
-        const user = await index_1.default.users.findById(userId);
+        const user = await index_1.default.users.findOne({ email: email });
         if (!user) {
-            (0, handleErrors_1.default)(res, 'Error uploading user');
+            (0, handleErrors_1.default)(res, 'Not found by email');
         }
         const video = await index_1.default.padelVideos.findById(videoId);
         if (!video) {
-            (0, handleErrors_1.default)(res, 'Error uploading file');
+            (0, handleErrors_1.default)(res, 'Not found by Id');
         }
         user === null || user === void 0 ? void 0 : user.videos.push(videoId);
         await (user === null || user === void 0 ? void 0 : user.save());
-        res.send('VIDEO LIBERADO CON EXITO');
+        res.send({
+            message: 'VIDEO RELEASED SUCCESSFULLY'
+        });
     }
     catch (error) {
         (0, handleErrors_1.default)(res, 'CANNOT RELATE MODELS');
