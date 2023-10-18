@@ -29,20 +29,22 @@ const url_1 = require("url");
 const dotenv = __importStar(require("dotenv"));
 dotenv.config();
 const storage = new storage_1.Storage({
-    projectId: process.env.PROJECT_ID,
+    projectId: process.env.BUCKET_PROJECT_ID,
     credentials: {
-        client_email: process.env.CLIENT_EMAIL,
-        private_key: (_a = process.env.PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.split(String.raw `\n`).join('\n')
+        client_email: process.env.BUCKET_CLIENT_EMAIL,
+        private_key: (_a = process.env.BUCKET_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.split(String.raw `\n`).join('\n')
     }
 });
-const bucketName = 'predix-images';
+const bucketName = 'videbox-bucket';
 const bucket = storage.bucket(bucketName);
 async function gcpImageUpload(file, location) {
     try {
         const ext = file.originalname.split('.').pop();
         const string = file.originalname.split('.').shift();
-        const name = string === null || string === void 0 ? void 0 : string.replace(/\s/g, '_');
+        const name = string === null || string === void 0 ? void 0 : string.replace(/\s/g, '_').replace(' ', '.');
+        console.log(string);
         const filename = `file-${Date.now()}-${name}.${ext}`;
+        console.log(filename);
         const blob = bucket.file(location + filename);
         const blobStream = blob.createWriteStream({
             resumable: false
@@ -63,7 +65,7 @@ async function gcpImageUpload(file, location) {
     }
     catch (error) {
         console.log(error);
-        return 'Cannot upload image';
+        return 'Cannot upload video';
     }
 }
 exports.default = gcpImageUpload;
