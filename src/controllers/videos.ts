@@ -27,7 +27,8 @@ async function uploadPadelVideo(req: Request, res: Response) {
     const result = addPrefixUrl(response, 'video');
     const fileData = {
       url: result,
-      filename: result.split('/')[2]
+      filename: result.split('/')[2],
+      fileId: file?.originalname
     };
     const data = await models.padelVideos.create(fileData);
     res.send({ data });
@@ -36,4 +37,31 @@ async function uploadPadelVideo(req: Request, res: Response) {
   }
 }
 
-export { getVideos, uploadPadelVideo };
+async function relateUserWithVideo(req: Request, res: Response) {
+  try {
+    const userId = req.params.userId;
+    const videoId = req.params.videoId;
+
+    const user = await models.users.findById(userId);
+
+    if (!user) {
+      handleHttpError(res, 'Error uploading user');
+    }
+
+    const video = await models.padelVideos.findById(videoId);
+
+    if (!video) {
+      handleHttpError(res, 'Error uploading file');
+    }
+
+    user?.videos.push(videoId);
+
+    await user?.save();
+
+    res.send('VIDEO LIBERADO CON EXITO');
+  } catch (error: any) {
+    handleHttpError(res, 'CANNOT RELATE MODELS');
+  }
+}
+
+export { getVideos, uploadPadelVideo, relateUserWithVideo };

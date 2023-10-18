@@ -9,4 +9,5 @@ const handleImage_1 = __importDefault(require("../middlewares/handleImage"));
 const router = express_1.default.Router();
 router.get('/videos', videos_1.getVideos);
 router.post('/upload-video', handleImage_1.default.single('video'), videos_1.uploadPadelVideo);
+router.post('/release-video/:userId/:videoId', videos_1.relateUserWithVideo);
 exports.default = router;

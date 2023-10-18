@@ -10,6 +10,9 @@ const padelVideoSchema = new mongoose_1.default.Schema({
     },
     url: {
         type: String
+    },
+    fileId: {
+        type: String
     }
 }, {
     timestamps: true,

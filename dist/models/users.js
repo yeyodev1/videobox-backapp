@@ -49,7 +49,13 @@ const usersSchema = new mongoose_1.default.Schema({
     isPaid: {
         type: Boolean,
         default: false
-    }
+    },
+    videos: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'padelVideos'
+        }
+    ]
 }, {
     timestamps: true,
     versionKey: false

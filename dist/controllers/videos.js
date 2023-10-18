@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.uploadPadelVideo = exports.getVideos = void 0;
+exports.relateUserWithVideo = exports.uploadPadelVideo = exports.getVideos = void 0;
 const gcpDriveApi_1 = __importDefault(require("../services/gcpDriveApi"));
 const gcpImageUpload_1 = __importDefault(require("../services/gcpImageUpload"));
 const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
@@ -28,7 +28,8 @@ async function uploadPadelVideo(req, res) {
         const result = (0, handleImageUrl_1.addPrefixUrl)(response, 'video');
         const fileData = {
             url: result,
-            filename: result.split('/')[2]
+            filename: result.split('/')[2],
+            fileId: file === null || file === void 0 ? void 0 : file.originalname
         };
         const data = await index_1.default.padelVideos.create(fileData);
         res.send({ data });
@@ -38,3 +39,24 @@ async function uploadPadelVideo(req, res) {
     }
 }
 exports.uploadPadelVideo = uploadPadelVideo;
+async function relateUserWithVideo(req, res) {
+    try {
+        const userId = req.params.userId;
+        const videoId = req.params.videoId;
+        const user = await index_1.default.users.findById(userId);
+        if (!user) {
+            (0, handleErrors_1.default)(res, 'Error uploading user');
+        }
+        const video = await index_1.default.padelVideos.findById(videoId);
+        if (!video) {
+            (0, handleErrors_1.default)(res, 'Error uploading file');
+        }
+        user === null || user === void 0 ? void 0 : user.videos.push(videoId);
+        await (user === null || user === void 0 ? void 0 : user.save());
+        res.send('VIDEO LIBERADO CON EXITO');
+    }
+    catch (error) {
+        (0, handleErrors_1.default)(res, 'CANNOT RELATE MODELS');
+    }
+}
+exports.relateUserWithVideo = relateUserWithVideo;

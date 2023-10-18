@@ -7,6 +7,9 @@ const padelVideoSchema: Schema = new mongoose.Schema(
     },
     url: {
       type: String
+    },
+    fileId: {
+      type: String
     }
   },
   {

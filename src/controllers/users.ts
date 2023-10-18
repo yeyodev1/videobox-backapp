@@ -9,7 +9,7 @@ import models from '../models/index';
 
 async function getUsers(_req: Request, res: Response) {
   try {
-    const users = await models.users.find({});
+    const users = await models.users.find({}).populate('videos');
     res.send(users);
   } catch (error) {
     handleHttpError(res, 'Cannot get users');
@@ -48,7 +48,7 @@ async function updateUser(req: Request, res: Response) {
 async function getUser(req: Request, res: Response) {
   try {
     const id = req.body.id;
-    const user = await models.users.findById(id);
+    const user = await models.users.findById(id).populate('videos');
 
     if (!user) {
       handleHttpError(res, 'Usuario no existe');
@@ -65,7 +65,8 @@ async function getUser(req: Request, res: Response) {
       birthdate: user?.birthdate,
       twitter: user?.twitter,
       instagram: user?.instagram,
-      isPaid: user?.isPaid
+      isPaid: user?.isPaid,
+      videos: user?.videos
     };
 
     res.send({ data });

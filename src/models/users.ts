@@ -56,7 +56,14 @@ const usersSchema: Schema = new mongoose.Schema(
     isPaid: {
       type: Boolean,
       default: false
-    }
+    },
+
+    videos: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'padelVideos'
+      }
+    ]
   },
   {
     timestamps: true,
