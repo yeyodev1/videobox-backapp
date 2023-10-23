@@ -41,36 +41,39 @@ exports.createAuthRegisterController = createAuthRegisterController;
 async function authLoginController(req, res) {
     try {
         const { email, password } = (0, express_validator_1.matchedData)(req);
-        // Buscar usuario y poblar videos en una sola consulta
         const user = await index_1.default.users
             .findOne({ email: email })
-            .select('password')
+            .select('password');
+        const userData = await index_1.default.users
+            .findOne({
+            email: email
+        })
             .populate('videos');
         if (!user) {
             (0, handleErrors_1.default)(res, 'User or password are not valid', 401);
             return;
         }
-        const checkPassword = await (0, handleJwt_1.compare)(password, user.password);
+        const hashPassword = user.password;
+        const checkPassword = await (0, handleJwt_1.compare)(password, hashPassword);
         if (!checkPassword) {
             (0, handleErrors_1.default)(res, 'User or password are not valid', 401);
             return;
         }
-        // Omitir la propiedad de la contraseña
         user.set('password', undefined, { strict: false });
         const data = {
             token: await (0, handleJwt_2.tokenSign)({
                 _id: user._id,
-                role: user.role
+                role: userData === null || userData === void 0 ? void 0 : userData.role
             }),
-            name: user.name,
-            id: user._id,
-            role: user.role,
-            email: user.email,
-            birthdate: user.birthdate,
-            twitter: user.twitter,
-            instagram: user.instagram,
-            isPaid: user.isPaid,
-            videos: user.videos
+            name: userData === null || userData === void 0 ? void 0 : userData.name,
+            id: userData === null || userData === void 0 ? void 0 : userData._id,
+            role: userData === null || userData === void 0 ? void 0 : userData.role,
+            email: userData === null || userData === void 0 ? void 0 : userData.email,
+            birthdate: userData === null || userData === void 0 ? void 0 : userData.birthdate,
+            twitter: userData === null || userData === void 0 ? void 0 : userData.twitter,
+            instagram: userData === null || userData === void 0 ? void 0 : userData.instagram,
+            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid,
+            videos: userData === null || userData === void 0 ? void 0 : userData.videos
         };
         res.send({ data });
     }
