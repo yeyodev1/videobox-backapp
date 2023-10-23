@@ -1,8 +1,10 @@
-import express from 'express';
-import cors from 'cors';
-import * as dotenv from 'dotenv';
 import { Application } from 'express';
+import express from 'express';
+import * as dotenv from 'dotenv';
+import cors from 'cors';
+import cron from 'node-cron';
 
+import syncDriveToGcp from './tasks/syncDriveAndGcp';
 import dbConnect from './config/mongo';
 import routerApi from './routes';
 
@@ -36,6 +38,12 @@ async function main() {
   app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
   });
+
+  // cron.schedule('*/30 * * * *', async () => {
+  //   // Coloca aquí el código que deseas ejecutar en el cron job
+  //   await syncDriveToGcp(); // Llama a la función correspondiente
+  //   console.log('Sincronización con drive y drive');
+  // });
 }
 
 main();

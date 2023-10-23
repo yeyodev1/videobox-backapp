@@ -4,16 +4,17 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.relateUserWithVideo = exports.uploadPadelVideo = exports.getVideos = void 0;
-const gcpDriveApi_1 = __importDefault(require("../services/gcpDriveApi"));
 const gcpImageUpload_1 = __importDefault(require("../services/gcpImageUpload"));
 const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 const index_1 = __importDefault(require("../models/index"));
 const handleImageUrl_1 = require("../utils/handleImageUrl");
-const videoManager = new gcpDriveApi_1.default();
 async function getVideos(_req, res) {
     try {
-        const folderId = 'Test Media Player';
-        const videos = await videoManager.getDirectVideoLinksInFolder(folderId);
+        const now = new Date();
+        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        const videos = await index_1.default.padelVideos.find({
+            createdAt: { $gte: sevenDaysAgo }
+        });
         res.send({ data: videos });
     }
     catch (error) {

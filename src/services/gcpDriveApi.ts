@@ -14,22 +14,16 @@ class DriveVideoManager {
       __dirname,
       '../static/videobox-401504-b63bc5c2cea5.json'
     );
-    // Carga las credenciales desde el archivo JSON en la raíz del proyecto
     const credentials = this.loadCredentials(credentialPaths);
-
-    // Configura la autenticación
     this.auth = new google.auth.GoogleAuth({
       credentials,
       scopes: ['https://www.googleapis.com/auth/drive']
     });
-
-    // Crea una instancia de la API de Google Drive
     this.drive = google.drive({ version: 'v3', auth: this.auth });
   }
 
   private loadCredentials(credentialPaths: string) {
     try {
-      // Carga las credenciales desde el archivo JSON en la raíz del proyecto
       const content = fs.readFileSync(credentialPaths, 'utf8');
       return JSON.parse(content);
     } catch (error: any) {
@@ -37,35 +31,31 @@ class DriveVideoManager {
     }
   }
 
+  async getAccessToken() {
+    const authClient = await this.auth.getClient();
+    return await authClient.getAccessToken();
+  }
+
   async getDirectVideoLinksInFolder(folderName: string) {
     try {
-      // Busca la carpeta por nombre
       const folder = await this.findFolderByName(folderName);
-
       if (!folder) {
-        throw new Error(
-          `No se encontró la carpeta con el nombre: ${folderName}`
-        );
+        throw new Error(`No se encontró la carpeta con el nombre: ${folderName}`);
       }
-
-      // Obtiene los archivos de tipo video en la carpeta
       const videos = await this.drive.files.list({
         q: `'${folder.id}' in parents and mimeType contains 'video/'`,
         fields: 'files(name,webViewLink,webContentLink,originalFilename, id)'
       });
-
-      // Formatea los resultados y genera enlaces directos
       const directLinks = videos.data.files.map((video: any) => ({
         name: video.name,
         directLink: video.id,
-        originalFilename: video.originalFilename
+        originalFilename: video.originalFilename,
+        webViewLink: video.webViewLink,
+        contectLink: video.webContentLink
       }));
-
       return directLinks;
     } catch (error: any) {
-      throw new Error(
-        'Error al obtener los enlaces de descarga: ' + error.message
-      );
+      throw new Error('Error al obtener los enlaces de descarga: ' + error.message);
     }
   }
 
@@ -75,14 +65,39 @@ class DriveVideoManager {
         q: `mimeType='application/vnd.google-apps.folder' and name='${folderName}'`,
         fields: 'files(id)'
       });
-
       if (folders.data.files.length > 0) {
         return folders.data.files[0];
       }
-
       return null;
     } catch (error: any) {
       throw new Error('Error al buscar la carpeta: ' + error.message);
+    }
+  }
+
+  async deleteAllFilesInFolder(folderName: string): Promise<void> {
+    try {
+      const folder = await this.findFolderByName(folderName);
+      if (!folder) {
+        throw new Error(
+          `No se encontró la carpeta con el nombre: ${folderName}`
+        );
+      }
+      // Obtiene una lista de todos los archivos en la carpeta
+      const files = await this.drive.files.list({
+        q: `'${folder.id}' in parents`,
+        fields: 'files(id)'
+      });
+      // Borra cada archivo en la carpeta
+      for (const file of files.data.files || []) {
+        await this.drive.files.delete({ fileId: file.id });
+      }
+      console.log(
+        `Todos los archivos en la carpeta "${folderName}" han sido eliminados.`
+      );
+    } catch (error: any) {
+      throw new Error(
+        'Error al eliminar los archivos de la carpeta: ' + error.message
+      );
     }
   }
 }

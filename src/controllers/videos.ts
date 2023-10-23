@@ -1,18 +1,19 @@
 import { Request, Response } from 'express';
 
-import DriveVideoManager from '../services/gcpDriveApi';
 import gcpImageUpload from '../services/gcpImageUpload';
 import handleHttpError from '../utils/handleErrors';
 import models from '../models/index';
 import { addPrefixUrl } from '../utils/handleImageUrl';
 
-const videoManager = new DriveVideoManager();
-
 async function getVideos(_req: Request, res: Response) {
   try {
-    const folderId = 'Test Media Player';
+    const now = new Date();
 
-    const videos = await videoManager.getDirectVideoLinksInFolder(folderId);
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+
+    const videos = await models.padelVideos.find({
+      createdAt: { $gte: sevenDaysAgo }
+    });
 
     res.send({ data: videos });
   } catch (error) {
