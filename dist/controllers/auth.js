@@ -44,9 +44,11 @@ async function authLoginController(req, res) {
         const user = await index_1.default.users
             .findOne({ email: email })
             .select('password');
-        const userData = await index_1.default.users.findOne({
+        const userData = await index_1.default.users
+            .findOne({
             email: email
-        });
+        })
+            .populate('videos');
         if (!user) {
             (0, handleErrors_1.default)(res, 'User or password are not valid', 401);
             return;
@@ -70,8 +72,7 @@ async function authLoginController(req, res) {
             birthdate: userData === null || userData === void 0 ? void 0 : userData.birthdate,
             twitter: userData === null || userData === void 0 ? void 0 : userData.twitter,
             instagram: userData === null || userData === void 0 ? void 0 : userData.instagram,
-            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid,
-            video: userData === null || userData === void 0 ? void 0 : userData.videos
+            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid
         };
         res.send({ data });
     }

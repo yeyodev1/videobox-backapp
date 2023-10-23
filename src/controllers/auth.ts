@@ -45,9 +45,11 @@ async function authLoginController(req: Request, res: Response) {
     const user = await models.users
       .findOne({ email: email })
       .select('password');
-    const userData: UserType | null = await models.users.findOne({
-      email: email
-    });
+    const userData: UserType | null = await models.users
+      .findOne({
+        email: email
+      })
+      .populate('videos');
 
     if (!user) {
       handleHttpError(res, 'User or password are not valid', 401);
@@ -76,8 +78,7 @@ async function authLoginController(req: Request, res: Response) {
       birthdate: userData?.birthdate,
       twitter: userData?.twitter,
       instagram: userData?.instagram,
-      isPaid: userData?.isPaid,
-      video: userData?.videos
+      isPaid: userData?.isPaid
     };
 
     res.send({ data });
