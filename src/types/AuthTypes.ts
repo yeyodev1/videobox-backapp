@@ -3,6 +3,12 @@ export type UserLoginToken = {
   role: string[];
 };
 
+type Video = {
+  name: string;
+  url: string;
+  fileId: string;
+}
+
 export type UserType = {
   _id: string;
   name: string | null;
@@ -12,4 +18,5 @@ export type UserType = {
   twitter: string | null;
   instagram: string | null;
   isPaid: boolean;
+  videos?: Video[];
 };

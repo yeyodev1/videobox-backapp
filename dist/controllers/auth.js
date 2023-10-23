@@ -70,7 +70,8 @@ async function authLoginController(req, res) {
             birthdate: userData === null || userData === void 0 ? void 0 : userData.birthdate,
             twitter: userData === null || userData === void 0 ? void 0 : userData.twitter,
             instagram: userData === null || userData === void 0 ? void 0 : userData.instagram,
-            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid
+            isPaid: userData === null || userData === void 0 ? void 0 : userData.isPaid,
+            video: userData === null || userData === void 0 ? void 0 : userData.videos
         };
         res.send({ data });
     }
