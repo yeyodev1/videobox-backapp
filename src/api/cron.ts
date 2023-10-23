@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import syncDriveToGcp from '../tasks/syncDriveAndGcp';
 
-export default async (req: Request, res: Response) => {
+export default async (_req: Request, res: Response) => {
   try {
     await syncDriveToGcp();
     console.log('Sincronización con drive y drive');
