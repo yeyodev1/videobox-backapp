@@ -29,6 +29,8 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
+const node_cron_1 = __importDefault(require("node-cron"));
+const syncDriveAndGcp_1 = __importDefault(require("./tasks/syncDriveAndGcp"));
 const mongo_1 = __importDefault(require("./config/mongo"));
 const routes_1 = __importDefault(require("./routes"));
 async function main() {
@@ -52,10 +54,10 @@ async function main() {
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
     });
-    // cron.schedule('*/30 * * * *', async () => {
-    //   // Coloca aquí el código que deseas ejecutar en el cron job
-    //   await syncDriveToGcp(); // Llama a la función correspondiente
-    //   console.log('Sincronización con drive y drive');
-    // });
+    node_cron_1.default.schedule('*/30 * * * *', async () => {
+        // Coloca aquí el código que deseas ejecutar en el cron job
+        await (0, syncDriveAndGcp_1.default)(); // Llama a la función correspondiente
+        console.log('Sincronización con drive y drive');
+    });
 }
 main();
