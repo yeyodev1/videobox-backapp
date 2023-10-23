@@ -42,13 +42,10 @@ async function createAuthRegisterController(req: Request, res: Response) {
 async function authLoginController(req: Request, res: Response) {
   try {
     const { email, password } = matchedData(req);
+    // Buscar usuario y poblar videos en una sola consulta
     const user = await models.users
       .findOne({ email: email })
-      .select('password');
-    const userData: UserType | null = await models.users
-      .findOne({
-        email: email
-      })
+      .select('password')
       .populate('videos');
 
     if (!user) {
@@ -56,29 +53,30 @@ async function authLoginController(req: Request, res: Response) {
       return;
     }
 
-    const hashPassword = user.password;
-    const checkPassword = await compare(password, hashPassword);
+    const checkPassword = await compare(password, user.password);
 
     if (!checkPassword) {
       handleHttpError(res, 'User or password are not valid', 401);
       return;
     }
 
+    // Omitir la propiedad de la contraseña
     user.set('password', undefined, { strict: false });
 
     const data = {
       token: await tokenSign({
         _id: user._id as string,
-        role: userData?.role as string[]
+        role: user.role as string[]
       }),
-      name: userData?.name,
-      id: userData?._id,
-      role: userData?.role,
-      email: userData?.email,
-      birthdate: userData?.birthdate,
-      twitter: userData?.twitter,
-      instagram: userData?.instagram,
-      isPaid: userData?.isPaid
+      name: user.name,
+      id: user._id,
+      role: user.role,
+      email: user.email,
+      birthdate: user.birthdate,
+      twitter: user.twitter,
+      instagram: user.instagram,
+      isPaid: user.isPaid,
+      videos: user.videos
     };
 
     res.send({ data });
@@ -86,6 +84,7 @@ async function authLoginController(req: Request, res: Response) {
     handleHttpError(res, 'Cannot auth user', 401);
   }
 }
+
 
 // async function passwordRecoveryRequestController(
 //   req: Request,
