@@ -2,7 +2,7 @@ import { Application } from 'express';
 import express from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
-import cron from 'node-cron';
+// import cron from 'node-cron';
 
 import syncDriveToGcp from './tasks/syncDriveAndGcp';
 import dbConnect from './config/mongo';
