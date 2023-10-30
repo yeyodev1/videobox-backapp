@@ -10,11 +10,13 @@ const index_1 = __importDefault(require("../models/index"));
 const handleImageUrl_1 = require("../utils/handleImageUrl");
 async function getVideos(_req, res) {
     try {
-        const now = new Date();
-        const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
-        const videos = await index_1.default.padelVideos.find({
-            createdAt: { $gte: sevenDaysAgo }
-        });
+        // const now = new Date();
+        // const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+        // const videos = await models.padelVideos.find({
+        //   createdAt: { $gte: sevenDaysAgo }
+        // });
+        const videos = await index_1.default.padelVideos.find({});
+        console.log(videos);
         res.send({ data: videos });
     }
     catch (error) {
