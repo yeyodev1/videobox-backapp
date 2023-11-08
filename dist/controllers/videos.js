@@ -12,7 +12,7 @@ const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 const index_1 = __importDefault(require("../models/index"));
 const handleImageUrl_1 = require("../utils/handleImageUrl");
 const gcpDriveApi_1 = __importDefault(require("../services/gcpDriveApi"));
-const gcpVideoUpload_1 = __importDefault(require("../services/gcpVideoUpload"));
+const gcpVideoUpload_1 = require("../services/gcpVideoUpload");
 const driveManagger = new gcpDriveApi_1.default();
 async function getVideos(_req, res) {
     try {
@@ -199,18 +199,16 @@ async function cutVideo(req, res) {
             console.log('Spawned Ffmpeg with command:', commandLine);
         })
             .on('end', async () => {
-            console.log('Video has been cut successfully.');
-            // Crear un stream de lectura para el archivo cortado
-            const readStream = fs_1.default.createReadStream(outputPath);
+            console.log('video has been cut as a champion');
+            const outputPath = path_1.default.join(tempDir, outputFilename);
             try {
-                // Subir el video cortado al bucket de Google Cloud Storage
-                const publicUrl = await (0, gcpVideoUpload_1.default)(readStream, outputFilename);
-                // Eliminar el archivo cortado del sistema de archivos local después de la carga
+                console.log(outputPath);
+                const publicUrl = await (0, gcpVideoUpload_1.uploadVideoToGCS)(outputPath);
                 fs_1.default.unlinkSync(outputPath);
                 res.status(200).json({ url: publicUrl });
             }
             catch (uploadError) {
-                console.error('Cannot upload video:', uploadError);
+                console.error('Error during video upload:', uploadError);
                 (0, handleErrors_1.default)(res, 'UPLOAD_ERROR', 500);
             }
         })

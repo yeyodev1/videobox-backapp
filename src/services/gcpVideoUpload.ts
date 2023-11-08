@@ -1,6 +1,8 @@
 import { Storage } from '@google-cloud/storage';
 import { format } from 'url';
 import * as dotenv from 'dotenv';
+import path from 'path';
+import { createReadStream } from 'fs';
 
 dotenv.config();
 
@@ -49,4 +51,31 @@ async function gcpVideoUpload(
   }
 }
 
-export default gcpVideoUpload;
+async function uploadVideoToGCS(filePath: string): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const filename = path.basename(filePath);
+    const blob = bucket.file(filename);
+    const blobStream = blob.createWriteStream({
+      resumable: true,
+      metadata: {
+        contentType: 'video/mp4',
+      },
+    });
+
+    blobStream.on('error', (error) => {
+      reject(error);
+    });
+
+    blobStream.on('finish', () => {
+    
+      blob.makePublic().then(() => {
+        const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+        resolve(publicUrl);
+      }).catch(reject);
+    });
+
+    createReadStream(filePath).pipe(blobStream);
+  });
+}
+
+export {gcpVideoUpload, uploadVideoToGCS};
