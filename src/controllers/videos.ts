@@ -200,40 +200,47 @@ function timeToSeconds(time: string): number {
 }
 
 async function cutVideo(req: Request, res: Response) {
-  console.log("Client Email:", process.env.BUCKET_CLIENT_EMAIL);
-  console.log("Private Key:", process.env.BUCKET_PRIVATE_KEY ? "Loaded" : "Not Loaded");
+  console.log("Iniciando el proceso de corte de video.");
 
   const { startTime, endTime, videoId } = req.body;
+  console.log(`Tiempo de inicio: ${startTime}, Tiempo de finalización: ${endTime}, ID del video: ${videoId}`);
 
   try {
+    console.log(`Buscando el video con ID: ${videoId}`);
     const video = await models.padelVideos.findById(videoId);
     if (!video) {
+      console.log(`Video con ID: ${videoId} no encontrado.`);
       return handleHttpError(res, 'VIDEO_NOT_FOUND', 404);
     }
 
+    console.log(`Video con ID: ${videoId} encontrado. Procediendo a cortar el video.`);
     const tempDir = path.join(__dirname, 'temp');
+    console.log(`Directorio temporal: ${tempDir}`);
+
     if (!fs.existsSync(tempDir)) {
+      console.log(`Directorio temporal no existe. Creando directorio temporal.`);
       fs.mkdirSync(tempDir);
     }
 
     const outputFilename = `cut_${Date.now()}.mp4`;
     const outputPath = path.join(tempDir, outputFilename);
+    console.log(`Nombre del archivo de salida: ${outputFilename}`);
 
     ffmpeg(video.url)
       .setStartTime(timeToSeconds(startTime))
       .setDuration(timeToSeconds(endTime) - timeToSeconds(startTime))
       .output(outputPath)
-      .on('start', (commandLine) => {
-        console.log('Spawned Ffmpeg with command:', commandLine);
-      })
       .on('end', async () => {
-        console.log('video has been cut as a champion')
         const outputPath = path.join(tempDir, outputFilename);
+        console.log(`Video cortado exitosamente. Archivo creado en: ${outputPath}`);
         try {
-          console.log(outputPath);
+          console.log(`Subiendo el video cortado a Google Cloud Storage.`);
           const publicUrl = await uploadVideoToGCS(outputPath);
+          console.log(`Video subido exitosamente. URL pública: ${publicUrl}`);
       
+          console.log(`Eliminando el archivo temporal: ${outputPath}`);
           fs.unlinkSync(outputPath);
+          console.log(`Archivo temporal eliminado.`);
       
           res.status(200).json({ url: publicUrl });
         } catch (uploadError) {
@@ -248,7 +255,7 @@ async function cutVideo(req: Request, res: Response) {
       .run();
 
   } catch (error: any) {
-    console.error('Error:', error);
+    console.error('Error on process of cut of video', error);
     handleHttpError(res, 'SERVER_ERROR', 500);
   }
 }
