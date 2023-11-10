@@ -22,17 +22,23 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.uploadVideoToGCS = exports.gcpVideoUpload = void 0;
 const storage_1 = require("@google-cloud/storage");
 const url_1 = require("url");
 const dotenv = __importStar(require("dotenv"));
+const path_1 = __importDefault(require("path"));
+const fs_1 = require("fs");
 dotenv.config();
 const storage = new storage_1.Storage({
     projectId: process.env.BUCKET_PROJECT_ID,
     credentials: {
         client_email: process.env.BUCKET_CLIENT_EMAIL,
-        private_key: (_a = process.env.BUCKET_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.split(String.raw `\n`).join('\n')
+        private_key: (_a = process.env.BUCKET_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, "\n"),
     }
 });
 const bucketName = 'videbox-bucket';
@@ -62,4 +68,25 @@ async function gcpVideoUpload(stream, filename) {
         throw error;
     }
 }
-exports.default = gcpVideoUpload;
+exports.gcpVideoUpload = gcpVideoUpload;
+async function uploadVideoToGCS(filePath) {
+    return new Promise((resolve, reject) => {
+        const filename = path_1.default.basename(filePath);
+        const blob = bucket.file(filename);
+        const blobStream = blob.createWriteStream({
+            resumable: true,
+            metadata: {
+                contentType: 'video/mp4',
+            },
+        });
+        blobStream.on('error', (error) => {
+            reject(error);
+        });
+        blobStream.on('finish', () => {
+            const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
+            resolve(publicUrl);
+        });
+        (0, fs_1.createReadStream)(filePath).pipe(blobStream);
+    });
+}
+exports.uploadVideoToGCS = uploadVideoToGCS;

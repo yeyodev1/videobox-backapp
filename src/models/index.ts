@@ -9,7 +9,7 @@ const models = {
   clubImages,
   users,
   userImages,
-  padelVideos
+  padelVideos,
 };
 
 export default models;

@@ -13,6 +13,6 @@ const models = {
     clubImages: clubImages_1.default,
     users: users_1.default,
     userImages: userImages_1.default,
-    padelVideos: padelVideos_1.default
+    padelVideos: padelVideos_1.default,
 };
 exports.default = models;
