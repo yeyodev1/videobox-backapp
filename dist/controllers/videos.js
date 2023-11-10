@@ -11,9 +11,7 @@ const gcpImageUpload_1 = __importDefault(require("../services/gcpImageUpload"));
 const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 const index_1 = __importDefault(require("../models/index"));
 const handleImageUrl_1 = require("../utils/handleImageUrl");
-const gcpDriveApi_1 = __importDefault(require("../services/gcpDriveApi"));
 const gcpVideoUpload_1 = require("../services/gcpVideoUpload");
-const driveManagger = new gcpDriveApi_1.default();
 async function getVideos(_req, res) {
     try {
         // const now = new Date();

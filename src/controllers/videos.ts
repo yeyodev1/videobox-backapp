@@ -2,19 +2,12 @@ import { Request, Response } from 'express';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import path from 'path';
-import axios from 'axios';
-import multer from 'multer';
-import videoCut from '../models/padelVideosCut';
 
 import gcpImageUpload from '../services/gcpImageUpload';
 import handleHttpError from '../utils/handleErrors';
 import models from '../models/index';
 import { addPrefixUrl } from '../utils/handleImageUrl';
-import Video from '../models/padelVideosCut';
-import DriveVideoManager from '../services/gcpDriveApi';
 import {uploadVideoToGCS} from '../services/gcpVideoUpload'
-
-const driveManagger = new DriveVideoManager();
 
 async function getVideos(_req: Request, res: Response) {
   try {
