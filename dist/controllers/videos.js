@@ -3,8 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.cutVideo = exports.relateUserWithVideo = exports.uploadPadelVideo = exports.getVideos = void 0;
-const fluent_ffmpeg_1 = __importDefault(require("fluent-ffmpeg"));
+exports.checkVideoStatus = exports.cutVideo = exports.relateUserWithVideo = exports.uploadPadelVideo = exports.getVideos = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 const gcpImageUpload_1 = __importDefault(require("../services/gcpImageUpload"));
@@ -12,6 +11,7 @@ const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 const index_1 = __importDefault(require("../models/index"));
 const handleImageUrl_1 = require("../utils/handleImageUrl");
 const gcpVideoUpload_1 = require("../services/gcpVideoUpload");
+const child_process_1 = require("child_process");
 async function getVideos(_req, res) {
     try {
         // const now = new Date();
@@ -73,57 +73,74 @@ function timeToSeconds(time) {
     const [hours, minutes, seconds] = time.split(':').map(Number);
     return hours * 3600 + minutes * 60 + seconds;
 }
+const videoProcessingTasks = new Map();
 async function cutVideo(req, res) {
-    console.log("Iniciando el proceso de corte de video.");
     const { startTime, endTime, videoId } = req.body;
-    console.log(`Tiempo de inicio: ${startTime}, Tiempo de finalización: ${endTime}, ID del video: ${videoId}`);
+    const taskId = `task_${Date.now()}`; // Generamos un identificador único para la tarea.
+    // Almacenamos la tarea con estado 'pending'.
+    videoProcessingTasks.set(taskId, { status: 'pending' });
+    // Respondemos inmediatamente que la tarea ha comenzado y proporcionamos el taskId.
+    res.status(202).json({ message: 'El proceso de corte de video ha comenzado.', taskId });
+    // Iniciamos el proceso de corte en segundo plano.
+    processVideoCut(startTime, endTime, videoId, taskId);
+}
+exports.cutVideo = cutVideo;
+async function processVideoCut(startTime, endTime, videoId, taskId) {
     try {
-        console.log(`Buscando el video con ID: ${videoId}`);
         const video = await index_1.default.padelVideos.findById(videoId);
         if (!video) {
-            console.log(`Video con ID: ${videoId} no encontrado.`);
-            return (0, handleErrors_1.default)(res, 'VIDEO_NOT_FOUND', 404);
+            videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+            return;
         }
-        console.log(`Video con ID: ${videoId} encontrado. Procediendo a cortar el video.`);
         const tempDir = path_1.default.join(__dirname, 'temp');
-        console.log(`Directorio temporal: ${tempDir}`);
         if (!fs_1.default.existsSync(tempDir)) {
-            console.log(`Directorio temporal no existe. Creando directorio temporal.`);
             fs_1.default.mkdirSync(tempDir);
         }
         const outputFilename = `cut_${Date.now()}.mp4`;
         const outputPath = path_1.default.join(tempDir, outputFilename);
-        console.log(`Nombre del archivo de salida: ${outputFilename}`);
-        (0, fluent_ffmpeg_1.default)(video.url)
-            .setStartTime(timeToSeconds(startTime))
-            .setDuration(timeToSeconds(endTime) - timeToSeconds(startTime))
-            .output(outputPath)
-            .on('end', async () => {
-            const outputPath = path_1.default.join(tempDir, outputFilename);
-            console.log(`Video cortado exitosamente. Archivo creado en: ${outputPath}`);
+        const ffmpegPath = 'ffmpeg';
+        const startTimeInSeconds = timeToSeconds(startTime);
+        const duration = timeToSeconds(endTime) - startTimeInSeconds;
+        const args = ['-ss', String(startTimeInSeconds), '-i', video.url, '-t', String(duration), '-c', 'copy', outputPath];
+        const child = (0, child_process_1.spawn)(ffmpegPath, args);
+        child.on('exit', async (code) => {
+            if (code !== 0) {
+                videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+                return;
+            }
             try {
-                console.log(`Subiendo el video cortado a Google Cloud Storage.`);
                 const publicUrl = await (0, gcpVideoUpload_1.uploadVideoToGCS)(outputPath);
-                console.log(`Video subido exitosamente. URL pública: ${publicUrl}`);
-                console.log(`Eliminando el archivo temporal: ${outputPath}`);
-                fs_1.default.unlinkSync(outputPath);
-                console.log(`Archivo temporal eliminado.`);
-                res.status(200).json({ url: publicUrl });
+                fs_1.default.unlinkSync(outputPath); // Eliminamos el archivo local una vez subido a GCS
+                videoProcessingTasks.set(taskId, { status: 'completed', url: publicUrl });
             }
-            catch (uploadError) {
-                console.error('Error during video upload:', uploadError);
-                (0, handleErrors_1.default)(res, 'UPLOAD_ERROR', 500);
+            catch (error) {
+                videoProcessingTasks.set(taskId, { status: 'error', url: '' });
             }
-        })
-            .on('error', (err) => {
-            console.error('Error with ffmpeg:', err.message);
-            (0, handleErrors_1.default)(res, 'FFMPEG_ERROR', 500);
-        })
-            .run();
+        });
+        child.on('error', () => {
+            videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+        });
     }
     catch (error) {
-        console.error('Error on process of cut of video', error);
-        (0, handleErrors_1.default)(res, 'SERVER_ERROR', 500);
+        videoProcessingTasks.set(taskId, { status: 'error', url: '' });
     }
 }
-exports.cutVideo = cutVideo;
+async function checkVideoStatus(req, res) {
+    const { taskId } = req.params;
+    const task = videoProcessingTasks.get(taskId);
+    if (!task) {
+        return (0, handleErrors_1.default)(res, 'TASK_NOT_FOUND', 404);
+    }
+    switch (task.status) {
+        case 'pending':
+            res.status(200).json({ message: 'Video aún en proceso.' });
+            break;
+        case 'completed':
+            res.status(200).json({ message: 'Video procesado.', url: task.url });
+            break;
+        case 'error':
+            (0, handleErrors_1.default)(res, 'PROCESSING_ERROR', 500);
+            break;
+    }
+}
+exports.checkVideoStatus = checkVideoStatus;

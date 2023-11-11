@@ -4,7 +4,8 @@ import {
   getVideos,
   uploadPadelVideo,
   relateUserWithVideo,
-  cutVideo
+  cutVideo,
+  checkVideoStatus
 } from '../controllers/videos';
 import uploadMiddleware from '../middlewares/handleImage';
 
@@ -18,8 +19,10 @@ router.post(
   uploadPadelVideo
 );
 
-router.post('/cut-video', uploadMiddleware.single('video'), cutVideo);
+router.post('/cut-video', cutVideo);
 
 router.post('/release-video/:userId/:videoId', relateUserWithVideo);
+
+router.get('/cut-video/:taskId', checkVideoStatus);
 
 export default router;
