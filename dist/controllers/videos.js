@@ -12,6 +12,7 @@ const index_1 = __importDefault(require("../models/index"));
 const handleImageUrl_1 = require("../utils/handleImageUrl");
 const gcpVideoUpload_1 = require("../services/gcpVideoUpload");
 const child_process_1 = require("child_process");
+const videoTask_1 = __importDefault(require("../models/videoTask"));
 async function getVideos(_req, res) {
     try {
         // const now = new Date();
@@ -73,15 +74,12 @@ function timeToSeconds(time) {
     const [hours, minutes, seconds] = time.split(':').map(Number);
     return hours * 3600 + minutes * 60 + seconds;
 }
-const videoProcessingTasks = new Map();
 async function cutVideo(req, res) {
     const { startTime, endTime, videoId } = req.body;
     const taskId = `task_${Date.now()}`; // Generamos un identificador único para la tarea.
-    // Almacenamos la tarea con estado 'pending'.
-    videoProcessingTasks.set(taskId, { status: 'pending' });
-    // Respondemos inmediatamente que la tarea ha comenzado y proporcionamos el taskId.
+    const newTask = new videoTask_1.default({ taskId, status: 'pending' });
+    await newTask.save();
     res.status(202).json({ message: 'El proceso de corte de video ha comenzado.', taskId });
-    // Iniciamos el proceso de corte en segundo plano.
     processVideoCut(startTime, endTime, videoId, taskId);
 }
 exports.cutVideo = cutVideo;
@@ -89,7 +87,7 @@ async function processVideoCut(startTime, endTime, videoId, taskId) {
     try {
         const video = await index_1.default.padelVideos.findById(videoId);
         if (!video) {
-            videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+            await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
             return;
         }
         const tempDir = path_1.default.join(__dirname, 'temp');
@@ -105,29 +103,24 @@ async function processVideoCut(startTime, endTime, videoId, taskId) {
         const child = (0, child_process_1.spawn)(ffmpegPath, args);
         child.on('exit', async (code) => {
             if (code !== 0) {
-                videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+                await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
                 return;
             }
-            try {
-                const publicUrl = await (0, gcpVideoUpload_1.uploadVideoToGCS)(outputPath);
-                fs_1.default.unlinkSync(outputPath); // Eliminamos el archivo local una vez subido a GCS
-                videoProcessingTasks.set(taskId, { status: 'completed', url: publicUrl });
-            }
-            catch (error) {
-                videoProcessingTasks.set(taskId, { status: 'error', url: '' });
-            }
+            const publicUrl = await (0, gcpVideoUpload_1.uploadVideoToGCS)(outputPath);
+            fs_1.default.unlinkSync(outputPath);
+            await videoTask_1.default.updateOne({ taskId }, { status: 'completed' }, { url: publicUrl });
         });
-        child.on('error', () => {
-            videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+        child.on('error', async () => {
+            await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
         });
     }
     catch (error) {
-        videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+        await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
     }
 }
 async function checkVideoStatus(req, res) {
     const { taskId } = req.params;
-    const task = videoProcessingTasks.get(taskId);
+    const task = await videoTask_1.default.findOne({ taskId });
     if (!task) {
         return (0, handleErrors_1.default)(res, 'TASK_NOT_FOUND', 404);
     }

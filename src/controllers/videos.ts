@@ -9,6 +9,8 @@ import models from '../models/index';
 import { addPrefixUrl } from '../utils/handleImageUrl';
 import {uploadVideoToGCS} from '../services/gcpVideoUpload'
 import { spawn } from 'child_process';
+import videoTask from '../models/videoTask';
+import { publicEncrypt } from 'crypto';
 
 async function getVideos(_req: Request, res: Response) {
   try {
@@ -79,20 +81,15 @@ function timeToSeconds(time: string): number {
   return hours * 3600 + minutes * 60 + seconds;
 }
 
-
-const videoProcessingTasks = new Map<string, { status: string, url?: string }>();
-
 async function cutVideo(req: Request, res: Response): Promise<void> {
   const { startTime, endTime, videoId } = req.body;
   const taskId = `task_${Date.now()}`; // Generamos un identificador único para la tarea.
+  
+  const newTask = new videoTask({ taskId, status: 'pending' });
+  await newTask.save()
 
-  // Almacenamos la tarea con estado 'pending'.
-  videoProcessingTasks.set(taskId, { status: 'pending' });
-
-  // Respondemos inmediatamente que la tarea ha comenzado y proporcionamos el taskId.
   res.status(202).json({ message: 'El proceso de corte de video ha comenzado.', taskId });
 
-  // Iniciamos el proceso de corte en segundo plano.
   processVideoCut(startTime, endTime, videoId, taskId);
 }
 
@@ -100,7 +97,7 @@ async function processVideoCut(startTime: string, endTime: string, videoId: stri
   try {
     const video = await models.padelVideos.findById(videoId);
     if (!video) {
-      videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+      await videoTask.updateOne({ taskId }, { status: 'error' });
       return;
     }
 
@@ -121,30 +118,30 @@ async function processVideoCut(startTime: string, endTime: string, videoId: stri
 
     child.on('exit', async (code) => {
       if (code !== 0) {
-        videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+        await videoTask.updateOne({taskId}, {status: 'error'});
         return;
       }
-      try {
-        const publicUrl = await uploadVideoToGCS(outputPath);
-        fs.unlinkSync(outputPath); // Eliminamos el archivo local una vez subido a GCS
-        videoProcessingTasks.set(taskId, { status: 'completed', url: publicUrl });
-      } catch (error) {
-        videoProcessingTasks.set(taskId, { status: 'error', url: '' });
-      }
+      const publicUrl = await uploadVideoToGCS(outputPath);
+      fs.unlinkSync(outputPath);
+      await videoTask.updateOne(
+        { taskId },
+        { status: 'completed' },
+        { url: publicUrl }
+      )
     });
 
-    child.on('error', () => {
-      videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+    child.on('error', async () => {
+      await videoTask.updateOne({ taskId }, { status: 'error' });
     });
   } catch (error) {
-    videoProcessingTasks.set(taskId, { status: 'error', url: '' });
+    await videoTask.updateOne({ taskId }, { status: 'error' });
   }
 }
 
 async function checkVideoStatus(req: Request, res: Response): Promise<void> {
   const { taskId } = req.params;
 
-  const task = videoProcessingTasks.get(taskId);
+  const task = await videoTask.findOne({taskId});
   if (!task) {
     return handleHttpError(res, 'TASK_NOT_FOUND', 404);
   }
