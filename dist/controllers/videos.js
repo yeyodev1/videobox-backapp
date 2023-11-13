@@ -108,7 +108,7 @@ async function processVideoCut(startTime, endTime, videoId, taskId) {
             }
             const publicUrl = await (0, gcpVideoUpload_1.uploadVideoToGCS)(outputPath);
             fs_1.default.unlinkSync(outputPath);
-            await videoTask_1.default.updateOne({ taskId }, { status: 'completed' }, { url: publicUrl });
+            await videoTask_1.default.updateOne({ taskId }, { status: 'completed', url: publicUrl });
         });
         child.on('error', async () => {
             await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
