@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const axios_1 = __importDefault(require("axios"));
 const gcpDriveApi_1 = __importDefault(require("../services/gcpDriveApi"));
-const gcpVideoUpload_1 = __importDefault(require("../services/gcpVideoUpload"));
+const gcpVideoUpload_1 = require("../services/gcpVideoUpload");
 const index_1 = __importDefault(require("../models/index"));
 async function syncDriveToGcp() {
     try {
@@ -25,7 +25,7 @@ async function syncDriveToGcp() {
                 headers: { Authorization: `Bearer ${accessToken.token}` },
                 responseType: 'stream'
             });
-            const publicUrl = await (0, gcpVideoUpload_1.default)(response.data, gcsLocation);
+            const publicUrl = await (0, gcpVideoUpload_1.gcpVideoUpload)(response.data, gcsLocation);
             const fileData = {
                 name: videoName,
                 url: publicUrl,

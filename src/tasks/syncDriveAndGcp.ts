@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 import DriveVideoManager from '../services/gcpDriveApi';
-import gcpVideoUpload from '../services/gcpVideoUpload';
+import { gcpVideoUpload } from '../services/gcpVideoUpload';
 import models from '../models/index';
 
 async function syncDriveToGcp(): Promise<void> {
