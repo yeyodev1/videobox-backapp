@@ -8,8 +8,6 @@ automatic_scaling:
   max_pending_latency: automatic
 
 env_variables:
-
-env_variables:
   PORT: '8000'
   MONGODB_URI: 'mongodb+srv://yeyodev:Bvv9juKZl2x15XaT@cluster0.gjvjaoo.mongodb.net/?retryWrites=true&w=majority'
   NODE_ENV: 'localhost'
