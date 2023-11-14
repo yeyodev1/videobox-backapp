@@ -6,3 +6,26 @@ automatic_scaling:
   max_idle_instances: automatic
   min_pending_latency: automatic
   max_pending_latency: automatic
+
+env_variables:
+
+env_variables:
+  PORT: '8000'
+  MONGODB_URI: 'mongodb+srv://yeyodev:Bvv9juKZl2x15XaT@cluster0.gjvjaoo.mongodb.net/?retryWrites=true&w=majority'
+  NODE_ENV: 'localhost'
+  TYPE: 'service_account'
+  PROJECT_ID: 'videobox-401504'
+  PRIVATE_ID_KEY: 'b63bc5c2cea577f58b9d5aad48eb81680c1b2cb1'
+  PRIVATE_KEY: '-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBK ... ==\n-----END PRIVATE KEY-----'
+  CLIENT_EMAIL: 'videobox@videobox-401504.iam.gserviceaccount.com'
+  CLIENT_ID: '114596542692182313993'
+  AUTH_URI: 'https://accounts.google.com/o/oauth2/auth'
+  TOKEN_URI: 'https://oauth2.googleapis.com/token'
+  AUTH_PROVIDER_X59_CERT_URL: 'https://www.googleapis.com/oauth2/v1/certs'
+  CLIENT_X59_CERT_URL: 'https://www.googleapis.com/robot/v1/metadata/x509/videobox%40videobox-401504.iam.gserviceaccount.com'
+  UNIVERSE_DOMAIN: 'googleapis.com'
+  JWT_SECRET: 'videobox_master_key'
+  BUCKET_PROJECT_ID: 'videobox-401504'
+  BUCKET_CLIENT_EMAIL: 'videobox-117@videobox-401504.iam.gserviceaccount.com'
+  BUCKET_PRIVATE_KEY: '-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBg ... ==\n-----END PRIVATE KEY-----'
+  DRIVE_API_KEY: 'AIzaSyC4I_dTJNhVU1nWHK_LJRBwvjNnaWYNwNg'
