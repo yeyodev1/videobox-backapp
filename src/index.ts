@@ -4,7 +4,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 // import cron from 'node-cron';
 
-import syncDriveToGcp from './tasks/syncDriveAndGcp';
+// import syncDriveToGcp from './tasks/syncDriveAndGcp';
 import dbConnect from './config/mongo';
 import routerApi from './routes';
 
