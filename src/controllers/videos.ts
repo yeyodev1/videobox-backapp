@@ -130,11 +130,11 @@ async function processVideoCut(startTime: string, endTime: string, videoId: stri
       )
     });
 
-    child.on('error', async () => {
-      await videoTask.updateOne({ taskId }, { status: 'error' });
+    child.on('error', async (error) => {
+      await videoTask.updateOne({ taskId }, { status: 'error', description: JSON.stringify(error) });
     });
   } catch (error) {
-    await videoTask.updateOne({ taskId }, { status: 'error' });
+    await videoTask.updateOne({ taskId }, { status: 'error', description: JSON.stringify(error) });
   }
 }
 

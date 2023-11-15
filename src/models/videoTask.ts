@@ -15,6 +15,9 @@ const videoTaskChema: Schema = new monggose.Schema(
     url: {
       type: String
     },
+    description: {
+      type: String
+    }
   },
   {
     timestamps: true,

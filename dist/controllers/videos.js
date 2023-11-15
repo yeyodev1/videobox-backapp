@@ -111,12 +111,12 @@ async function processVideoCut(startTime, endTime, videoId, taskId) {
             fs_1.default.unlinkSync(outputPath);
             await videoTask_1.default.updateOne({ taskId }, { status: 'completed', url: publicUrl });
         });
-        child.on('error', async () => {
-            await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
+        child.on('error', async (error) => {
+            await videoTask_1.default.updateOne({ taskId }, { status: 'error', description: JSON.stringify(error) });
         });
     }
     catch (error) {
-        await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
+        await videoTask_1.default.updateOne({ taskId }, { status: 'error', description: JSON.stringify(error) });
     }
 }
 async function checkVideoStatus(req, res) {

@@ -18,6 +18,9 @@ const videoTaskChema = new mongoose_2.default.Schema({
     url: {
         type: String
     },
+    description: {
+        type: String
+    }
 }, {
     timestamps: true,
     versionKey: false,
