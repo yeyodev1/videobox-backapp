@@ -6,7 +6,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.checkVideoStatus = exports.cutVideo = exports.relateUserWithVideo = exports.uploadPadelVideo = exports.getVideos = void 0;
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
-const os_1 = require("os");
 const gcpImageUpload_1 = __importDefault(require("../services/gcpImageUpload"));
 const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 const index_1 = __importDefault(require("../models/index"));
@@ -91,7 +90,7 @@ async function processVideoCut(startTime, endTime, videoId, taskId) {
             await videoTask_1.default.updateOne({ taskId }, { status: 'error' });
             return;
         }
-        const temp = (0, os_1.tmpdir)();
+        const temp = '/tmp';
         if (!fs_1.default.existsSync(temp)) {
             fs_1.default.mkdirSync(temp);
         }

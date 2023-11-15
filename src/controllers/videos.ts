@@ -102,7 +102,7 @@ async function processVideoCut(startTime: string, endTime: string, videoId: stri
       return;
     }
 
-    const temp = tmpdir()
+    const temp = '/tmp'
     if (!fs.existsSync(temp)) {
       fs.mkdirSync(temp);
     }
