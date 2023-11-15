@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import path from 'path';
+import { tmpdir } from 'os'
 
 import gcpImageUpload from '../services/gcpImageUpload';
 import handleHttpError from '../utils/handleErrors';
@@ -101,13 +102,13 @@ async function processVideoCut(startTime: string, endTime: string, videoId: stri
       return;
     }
 
-    const tempDir = path.join(__dirname, 'temp');
-    if (!fs.existsSync(tempDir)) {
-      fs.mkdirSync(tempDir);
+    const temp = tmpdir()
+    if (!fs.existsSync(temp)) {
+      fs.mkdirSync(temp);
     }
 
     const outputFilename = `cut_${Date.now()}.mp4`;
-    const outputPath = path.join(tempDir, outputFilename);
+    const outputPath = path.join(temp, outputFilename);
 
     const ffmpegPath = 'ffmpeg';
     const startTimeInSeconds = timeToSeconds(startTime);
