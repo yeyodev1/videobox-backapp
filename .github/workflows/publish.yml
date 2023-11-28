@@ -1,0 +1,38 @@
+name: publish-videobox
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  create-docker-image:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - name: Login to github container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN_BACKAPP_VIDEOBOX }}
+
+      - name: Build Videobox backapp image
+        run: |
+          dockert build . --tag ghcr.io/yeyodev1/videobox-backapp:latest
+          docker push ghcr.io/yeyodev1/videobox-backapp:latest
+  deploy:
+    needs: create-docker-image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install sspass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Deploy to DONW WEB VPS
+        env:
+          SSH_HOST: ${{ secrets.VPS_HOST }}
+          SSH_USER: ${{ secrets.VPS_USER }}
+          SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+        run: |
+          sshpass - $SSH_PASSWORD ssh -o StricktHostKeyCheckin=no  $SSH_USER@$SSH_HOST "docker pull ghcr.io/yeyodev1/videobox-backapp:latest && docker run -d --name myapp -p 80:8080 ghcr.io/yeyodev1/videobox-backapp:latest"
