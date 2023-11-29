@@ -62,7 +62,9 @@ ENV PORT=${PORT} \
   DRIVE_API_KEY=${DRIVE_API_KEY}
 
 # Compilar el código TypeScript (si es necesario)
-RUN npm run compile
+RUN npm run build
+
+RUN npm run production
 
 # Exponer el puerto en el que se ejecuta la aplicación
 EXPOSE 8080
