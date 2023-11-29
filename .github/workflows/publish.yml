@@ -20,7 +20,27 @@ jobs:
 
       - name: Build Videobox backapp image
         run: |
-          docker build --build-arg PORT=${{ secrets.PORT }} --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }} --build-arg NODE_ENV=${{ secrets.NODE_ENV }} --build-arg TYPE=${{ secrets.TYPE }} --build-arg PROJECT_ID=${{ secrets.PROJECT_ID }} --build-arg PRIVATE_ID_KEY=${{ secrets.PRIVATE_ID_KEY }} --build-arg PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} --build-arg CLIENT_EMAIL=${{ secrets.CLIENT_EMAIL }} --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} --build-arg AUTH_URI=${{ secrets.AUTH_URI }} --build-arg TOKEN_URI=${{ secrets.TOKEN_URI }} --build-arg AUTH_PROVIDER_X59_CERT_URL=${{ secrets.AUTH_PROVIDER_X59_CERT_URL }} --build-arg CLIENT_X59_CERT_URL=${{ secrets.CLIENT_X59_CERT_URL }} --build-arg UNIVERSE_DOMAIN=${{ secrets.UNIVERSE_DOMAIN }} --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} --build-arg BUCKET_PROJECT_ID=${{ secrets.BUCKET_PROJECT_ID }} --build-arg BUCKET_CLIENT_EMAIL=${{ secrets.BUCKET_CLIENT_EMAIL }} --build-arg BUCKET_PRIVATE_KEY=${{ secrets.BUCKET_PRIVATE_KEY }} --build-arg DRIVE_API_KEY=${{ secrets.DRIVE_API_KEY }} --tag ghcr.io/yeyodev1/videobox-backapp:latest .
+          docker build \
+            --build-arg PORT=${{ secrets.PORT }} \
+            --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }} \
+            --build-arg NODE_ENV=${{ secrets.NODE_ENV }} \
+            --build-arg TYPE=${{ secrets.TYPE }} \
+            --build-arg PROJECT_ID=${{ secrets.PROJECT_ID }} \
+            --build-arg PRIVATE_ID_KEY=${{ secrets.PRIVATE_ID_KEY }} \
+            --build-arg PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} \
+            --build-arg CLIENT_EMAIL=${{ secrets.CLIENT_EMAIL }} \
+            --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} \
+            --build-arg AUTH_URI=${{ secrets.AUTH_URI }} \
+            --build-arg TOKEN_URI=${{ secrets.TOKEN_URI }} \
+            --build-arg AUTH_PROVIDER_X59_CERT_URL=${{ secrets.AUTH_PROVIDER_X59_CERT_URL }} \
+            --build-arg CLIENT_X59_CERT_URL=${{ secrets.CLIENT_X59_CERT_URL }} \
+            --build-arg UNIVERSE_DOMAIN=${{ secrets.UNIVERSE_DOMAIN }} \
+            --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
+            --build-arg BUCKET_PROJECT_ID=${{ secrets.BUCKET_PROJECT_ID }} \
+            --build-arg BUCKET_CLIENT_EMAIL=${{ secrets.BUCKET_CLIENT_EMAIL }} \
+            --build-arg BUCKET_PRIVATE_KEY=${{ secrets.BUCKET_PRIVATE_KEY }} \
+            --build-arg DRIVE_API_KEY=${{ secrets.DRIVE_API_KEY }} \
+            --tag ghcr.io/yeyodev1/videobox-backapp:latest .
 
   deploy:
     needs: create-docker-image
@@ -35,4 +55,4 @@ jobs:
           SSH_USER: ${{ secrets.VPS_USER }}
           SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker pull ghcr.io/yeyodev1/videobox-backapp:latest && docker run -d --name myapp -p 80:8080 -e PORT=$PORT -e MONGODB_URI=$MONGODB_URI -e NODE_ENV=$NODE_ENV -e TYPE=$TYPE -e PROJECT_ID=$PROJECT_ID -e PRIVATE_ID_KEY=$PRIVATE_ID_KEY -e PRIVATE_KEY=$PRIVATE_KEY -e CLIENT_EMAIL=$CLIENT_EMAIL -e CLIENT_ID=$CLIENT_ID -e AUTH_URI=$AUTH_URI -e TOKEN_URI=$TOKEN_URI -e AUTH_PROVIDER_X59_CERT_URL=$AUTH_PROVIDER_X59_CERT_URL -e CLIENT_X59_CERT_URL=$CLIENT_X59_CERT_URL -e UNIVERSE_DOMAIN=$UNIVERSE_DOMAIN -e JWT_SECRET=$JWT_SECRET -e BUCKET_PROJECT_ID=$BUCKET_PROJECT_ID -e BUCKET_CLIENT_EMAIL=$BUCKET_CLIENT_EMAIL -e BUCKET_PRIVATE_KEY=$BUCKET_PRIVATE_KEY -e DRIVE_API_KEY=$DRIVE_API_KEY ghcr.io/yeyodev1/videobox-backapp:latest"
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker pull ghcr.io/yeyodev1/videobox-backapp:latest && docker run -d --name myapp -p 80:8080 ghcr.io/yeyodev1/vide
