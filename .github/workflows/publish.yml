@@ -20,7 +20,7 @@ jobs:
 
       - name: Build Videobox backapp image
         run: |
-          docker push ghcr.io/yeyodev1/videobox-backapp:latest
+          docker push . --tag ghcr.io/yeyodev1/videobox-backapp:latest
           docker build ghcr.io/yeyodev1/videobox-backapp:latest
 
   deploy:
