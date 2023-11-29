@@ -36,7 +36,7 @@ jobs:
           SSH_USER: ${{ secrets.VPS_USER }}
           SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST << EOF
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p5793 << EOF
           echo "Starting SSH script"
           echo "Checking if container exists..."
           if docker inspect myapp &> /dev/null; then
