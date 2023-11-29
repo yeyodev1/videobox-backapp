@@ -34,5 +34,25 @@ jobs:
           SSH_HOST: ${{ secrets.VPS_HOST }}
           SSH_USER: ${{ secrets.VPS_USER }}
           SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+          PORT: ${{ secrets.PORT }}
+          MONGODB_URI: ${{ secrets.MONGODB_URI}}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          TYPE: ${{ secrets.TYPE }}
+          PROJECT_ID: ${{ secrets.PROJECT_ID }}
+          PRIVATE_ID_KEY: ${{ secrets.PRIVATE_ID_KEY }}
+          PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+          CLIENT_EMAIL: ${{ secrets.CLIENT_EMAIL }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          AUTH_URI: ${{ secrets.AUTH_URI }}
+          TOKEN_URI: ${{ secrets.TOKEN_URI }}
+          AUTH_PROVIDER_X59_CERT_URL: ${{ secrets.AUTH_PROVIDER_X59_CERT_URL }}
+          CLIENT_X59_CERT_URL: ${{ secrets.CLIENT_X59_CERT_URL }}
+          UNIVERSE_DOMAIN: ${{ secrets.UNIVERSE_DOMAIN }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          BUCKET_PROJECT_ID: ${{ secrets.BUCKET_PROJECT_ID }}
+          BUCKET_CLIENT_EMAIL: ${{ secrets.BUCKET_CLIENT_EMAIL }}
+          BUCKET_PRIVATE_KEY: ${{ secrets.BUCKET_PRIVATE_KEY }}
+          DRIVE_API_KEY: ${{ secrets.DRIVE_API_KEY }}
+
         run: |
           sshpass - $SSH_PASSWORD ssh -o StricktHostKeyCheckin=no  $SSH_USER@$SSH_HOST "docker pull ghcr.io/yeyodev1/videobox-backapp:latest && docker run -d --name myapp -p 80:8080 ghcr.io/yeyodev1/videobox-backapp:latest"
