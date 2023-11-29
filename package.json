@@ -9,6 +9,7 @@
     "build": "tsc",
     "dev": "nodemon dist/index.js",
     "start": "nodemon src/index.ts",
+    "production": "node src/index.ts",
     "prettier-format": "prettier --config .prettierrc 'src/**/*.ts' --write",
     "lint": "eslint . --ext .ts"
   },

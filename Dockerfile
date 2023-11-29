@@ -14,7 +14,7 @@ RUN mkdir tmp
 
 RUN npm run build
 
-RUN npm run start
+RUN npm run production
 
 EXPOSE 8080
 
