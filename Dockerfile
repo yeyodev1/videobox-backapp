@@ -12,9 +12,9 @@ COPY . .
 
 RUN mkdir tmp
 
-RUN npm run compile
+RUN npm run build
 
-RUN npm run 
+RUN npm run start
 
 EXPOSE 8080
 
