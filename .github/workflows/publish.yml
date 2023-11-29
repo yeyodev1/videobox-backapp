@@ -20,27 +20,8 @@ jobs:
 
       - name: Build Videobox backapp image
         run: |
-          docker build \
-            --build-arg PORT=${{ secrets.PORT }} \
-            --build-arg MONGODB_URI=${{ secrets.MONGODB_URI }} \
-            --build-arg NODE_ENV=${{ secrets.NODE_ENV }} \
-            --build-arg TYPE=${{ secrets.TYPE }} \
-            --build-arg PROJECT_ID=${{ secrets.PROJECT_ID }} \
-            --build-arg PRIVATE_ID_KEY=${{ secrets.PRIVATE_ID_KEY }} \
-            --build-arg PRIVATE_KEY=${{ secrets.PRIVATE_KEY }} \
-            --build-arg CLIENT_EMAIL=${{ secrets.CLIENT_EMAIL }} \
-            --build-arg CLIENT_ID=${{ secrets.CLIENT_ID }} \
-            --build-arg AUTH_URI=${{ secrets.AUTH_URI }} \
-            --build-arg TOKEN_URI=${{ secrets.TOKEN_URI }} \
-            --build-arg AUTH_PROVIDER_X59_CERT_URL=${{ secrets.AUTH_PROVIDER_X59_CERT_URL }} \
-            --build-arg CLIENT_X59_CERT_URL=${{ secrets.CLIENT_X59_CERT_URL }} \
-            --build-arg UNIVERSE_DOMAIN=${{ secrets.UNIVERSE_DOMAIN }} \
-            --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} \
-            --build-arg BUCKET_PROJECT_ID=${{ secrets.BUCKET_PROJECT_ID }} \
-            --build-arg BUCKET_CLIENT_EMAIL=${{ secrets.BUCKET_CLIENT_EMAIL }} \
-            --build-arg BUCKET_PRIVATE_KEY=${{ secrets.BUCKET_PRIVATE_KEY }} \
-            --build-arg DRIVE_API_KEY=${{ secrets.DRIVE_API_KEY }} \
-            --tag ghcr.io/yeyodev1/videobox-backapp:latest .
+          docker push ghcr.io/yeyodev1/videobox-backapp:latest
+          docker build ghcr.io/yeyodev1/videobox-backapp:latest
 
   deploy:
     needs: create-docker-image
@@ -55,4 +36,4 @@ jobs:
           SSH_USER: ${{ secrets.VPS_USER }}
           SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
         run: |
-          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker pull ghcr.io/yeyodev1/videobox-backapp:latest && docker run -d --name myapp -p 80:8080 ghcr.io/yeyodev1/vide
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST "docker pull ghcr.io/yeyodev1/videobox-backapp:latest && docker run -d --name myapp -p 80:8080 ghcr.io/yeyodev1/videobox-backapp
