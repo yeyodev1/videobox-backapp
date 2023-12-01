@@ -55,7 +55,7 @@ async function main() {
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
     });
-    node_cron_1.default.schedule('*/10 * * * *', async () => {
+    node_cron_1.default.schedule('*/15 * * * *', async () => {
         // Coloca aquí el código que deseas ejecutar en el cron job
         await (0, syncDriveAndGcp_1.default)(); // Llama a la función correspondiente
         console.log('Sincronización con drive y drive');
