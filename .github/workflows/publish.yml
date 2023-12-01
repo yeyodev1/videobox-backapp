@@ -78,6 +78,7 @@ jobs:
               -e BUCKET_CLIENT_EMAIL='${{ secrets.BUCKET_CLIENT_EMAIL }}' \
               -e BUCKET_PRIVATE_KEY='${{ secrets.BUCKET_PRIVATE_KEY }}' \
               -e DRIVE_API_KEY='${{ secrets.DRIVE_API_KEY }}' \
+              -e SENDGRID_API_KEY=‘${{ secrets.SENDGRID_API_KEY }}’ \
               ghcr.io/yeyodev1/videobox-backapp:latest
             echo "done..."
           EOF
