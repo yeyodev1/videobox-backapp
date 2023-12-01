@@ -37,7 +37,10 @@ class DriveVideoManager {
         const credentials = this.loadCredentials(credentialPaths);
         this.auth = new googleapis_1.google.auth.GoogleAuth({
             credentials,
-            scopes: ['https://www.googleapis.com/auth/drive']
+            scopes: [
+                'https://www.googleapis.com/auth/drive',
+                'https://www.googleapis.com/auth/drive.file'
+            ]
         });
         this.drive = googleapis_1.google.drive({ version: 'v3', auth: this.auth });
     }

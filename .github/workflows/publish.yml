@@ -1,0 +1,83 @@
+name: publish-videobox
+
+on:
+  push:
+    branches: ['main']
+
+jobs:
+  create-docker-image:
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - name: Login to github container registry
+        uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.TOKEN_BACKAPP_VIDEOBOX }}
+
+      - name: Build Videobox backapp image
+        run: |
+          docker build . --tag ghcr.io/yeyodev1/videobox-backapp:latest
+          docker push ghcr.io/yeyodev1/videobox-backapp:latest
+
+  deploy:
+    needs: create-docker-image
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Install sshpass
+        run: sudo apt-get update && sudo apt-get install -y sshpass
+
+      - name: Deploy to DONW WEB VPS
+        env:
+          SSH_HOST: ${{ secrets.VPS_HOST }}
+          SSH_USER: ${{ secrets.VPS_USER }}
+          SSH_PASSWORD: ${{ secrets.VPS_PASSWORD }}
+        run: |
+          sshpass -p $SSH_PASSWORD ssh -o StrictHostKeyChecking=no $SSH_USER@$SSH_HOST -p5793 << EOF
+            echo "Starting SSH script"
+            echo "Checking if container exists..."
+            if docker inspect myapp &> /dev/null; then
+              echo "Container myapp exists, stopping and removing..."
+              docker stop myapp
+              docker rm myapp
+            else
+              echo "Container myapp does not exist."
+            fi
+
+            echo "Logging into Docker registry..."
+            docker login ghcr.io -u yeyodev1 -p ${{secrets.TOKEN_BACKAPP_VIDEOBOX}}
+
+            echo "Pulling the latest Docker image..."
+            docker pull ghcr.io/yeyodev1/videobox-backapp:latest
+
+            echo "Running the Docker container..."
+
+            docker run -d \
+              --name myapp \
+              -p 8080:8080 \
+              --restart always \
+              -e PORT='${{ secrets.PORT }}' \
+              -e MONGODB_URI='${{ secrets.MONGODB_URI }}' \
+              -e NODE_ENV='${{ secrets.NODE_ENV }}' \
+              -e TYPE='${{ secrets.TYPE }}' \
+              -e PROJECT_ID='${{ secrets.PROJECT_ID }}' \
+              -e PRIVATE_ID_KEY='${{ secrets.PRIVATE_ID_KEY }}' \
+              -e PRIVATE_KEY='${{ secrets.PRIVATE_KEY }}' \
+              -e CLIENT_EMAIL='${{ secrets.CLIENT_EMAIL }}' \
+              -e CLIENT_ID='${{ secrets.CLIENT_ID }}' \
+              -e AUTH_URI='${{ secrets.AUTH_URI }}' \
+              -e TOKEN_URI='${{ secrets.TOKEN_URI }}' \
+              -e AUTH_PROVIDER_X59_CERT_URL='${{ secrets.AUTH_PROVIDER_X59_CERT_URL }}' \
+              -e CLIENT_X59_CERT_URL='${{ secrets.CLIENT_X59_CERT_URL }}' \
+              -e UNIVERSE_DOMAIN='${{ secrets.UNIVERSE_DOMAIN }}' \
+              -e JWT_SECRET='${{ secrets.JWT_SECRET }}' \
+              -e BUCKET_PROJECT_ID='${{ secrets.BUCKET_PROJECT_ID }}' \
+              -e BUCKET_CLIENT_EMAIL='${{ secrets.BUCKET_CLIENT_EMAIL }}' \
+              -e BUCKET_PRIVATE_KEY='${{ secrets.BUCKET_PRIVATE_KEY }}' \
+              -e DRIVE_API_KEY='${{ secrets.DRIVE_API_KEY }}' \
+              ghcr.io/yeyodev1/videobox-backapp:latest
+            echo "done..."
+          EOF

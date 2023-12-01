@@ -7,15 +7,17 @@ import models from '../models/index';
 import { encrypt, compare } from '../middlewares/handleJwt';
 import { UserType } from '../types/AuthTypes';
 import { tokenSign } from '../utils/handleJwt';
-// import { generatePasswordRecoveryTemplate } from '../emails/PasswordRecovery';
-// import { generatePasswordRecoveryNotificationTemplate } from '../emails/PasswordRecoveryNotification';
+import { sendEmail } from '../services/sendGrid';
+import { generateEmailVerificationTemplate } from '../emails/EmailVerification';
+import { generatePasswordRecoveryTemplate } from '../emails/PasswordRecovery';
+import { generatePasswordRecoveryNotificationTemplate } from '../emails/PasswordRecoveryNotification';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
 async function createAuthRegisterController(req: Request, res: Response) {
   try {
     const { body } = req;
-    // const email = body.email;
+    const email = body.email;
     const encryptedPassword = await encrypt(body.password);
     const userData = { ...body, password: encryptedPassword };
     const newAuth = await models.users.create(userData);
@@ -31,6 +33,12 @@ async function createAuthRegisterController(req: Request, res: Response) {
       role,
       _id
     };
+
+    const link = `https://radiant-narwhal-d48ded.netlify.app/email-verified/${data.token}`;
+
+    const verificationBody = generateEmailVerificationTemplate(link);
+
+    sendEmail(email, 'EMAIL DE VERIFICACIÓN', verificationBody);
 
     res.send({ data });
   } catch (error) {
@@ -88,35 +96,35 @@ async function authLoginController(req: Request, res: Response) {
   }
 }
 
-// async function passwordRecoveryRequestController(
-//   req: Request,
-//   res: Response
-// ): Promise<void> {
-//   try {
-//     const email = req.body.email;
-//     const user = await models.users.findOne({ email: email });
+async function passwordRecoveryRequestController(
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const email = req.body.email;
+    const user = await models.users.findOne({ email: email });
 
-//     if (!user) {
-//       handleHttpError(res, 'User do not exist', 402);
-//       return;
-//     }
+    if (!user) {
+      handleHttpError(res, 'User do not exist', 402);
+      return;
+    }
 
-//     const token = await tokenSign({
-//       role: user.role,
-//       _id: user.id
-//     });
+    const token = await tokenSign({
+      role: user.role,
+      _id: user.id
+    });
 
-//     const link = `https://predix.ec/update-password/${token}`;
+    const link = `https://radiant-narwhal-d48ded.netlify.app/update-password/${token}`;
 
-//     const bodyEmail = generatePasswordRecoveryTemplate(link);
+    const bodyEmail = generatePasswordRecoveryTemplate(link);
 
-//     sendEmail(user.email, 'RESTABLECER CONTRASEÑA', bodyEmail);
-//     res.send({ message: 'Request recover password' });
-//   } catch (error) {
-//     console.error(error);
-//     handleHttpError(res, 'Cannot create user', 401);
-//   }
-// }
+    sendEmail(user.email, 'RESTABLECER CONTRASEÑA', bodyEmail);
+    res.send({ message: 'Request recover password' });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Cannot create user', 401);
+  }
+}
 
 async function updatePasswordAndNotify(
   req: Request,
@@ -149,9 +157,9 @@ async function updatePasswordAndNotify(
       }
     });
 
-    // const bodyEmail = generatePasswordRecoveryNotificationTemplate();
+    const bodyEmail = generatePasswordRecoveryNotificationTemplate();
 
-    // sendEmail(user.email, 'CONTRASEÑA RESTABLECIDA', bodyEmail);
+    sendEmail(user.email, 'CONTRASEÑA RESTABLECIDA', bodyEmail);
     res.send({ message: 'Password successfully updated' });
   } catch (error) {
     console.error(error);
@@ -162,6 +170,6 @@ async function updatePasswordAndNotify(
 export {
   createAuthRegisterController,
   authLoginController,
-  updatePasswordAndNotify
-  // passwordRecoveryRequestController
+  updatePasswordAndNotify,
+  passwordRecoveryRequestController
 };

@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "gmail-videobox",
+  "private_key_id": "65281b7dcfb86ac4bd24ab4dbb87c367f2e4b798",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCwokqLC+5OuHWF\nXRRFIwjYmv1GfPgOX/TsCQmlemlS2f1zQ0186GOaX4r0+U1Vu3C9U4I9sfyDg6fY\nJqBow16mxwW5y9gCuSJQMwZ9mKFxvhHNb0NqDtqLKfy/GzxGAgFIu53KJCMHS71T\nb8PP4MFAXuk6hEIe32Zos8qdWjnmpHMZgpHpjYyjgkW8c9nlhpHb1GAaVZUcIcem\nAoaXjknYetJl+wGkp3oeGcIogu8UbCyQo5XIM0MNxR+h5XwmC2KYBAF6SHNV4WrP\nOg3CCJToJNkDgt7j2Z4lBgcs09VYtDjwZLP1HYsTV3rsA8x/IJ+oaYOAsrXJIG1m\nJGaPXp53AgMBAAECggEAAMqetjl1y5PXWviheEnW5qQ90aIKY9jEOoaJLNz75IDQ\n5Oz+nOUBr+sRBACrUGCy+aDf1Yea+mU4TFH9UrAwGA6OP63ifZNMzGUzeJPwLUKi\ncR7i2MfQ7OIMSDhGsIhJGdqqs1bZcqqWjO1+8ssusoDPtLvA/BhuLLaZiCj5Ah06\nn118s1Rd07NSXd2ZojD/JWYRbBw071qpV/mc10tQYH9ltrsSkaEtDh3xAJX6LAt5\nlhaC1TX71/28lyReq84hGVAfPYUu7XSQNO8P8oyLcQLYr/B4UIEVhqb5cfDj/byy\n1mmbQNAzjj9nRjUWgM9eYAKV7gJAU1DsrzxrSXJv+QKBgQDiAu78nE7dC4xRuWGB\n0UT+IzMehyJ2c5cnp4RuWVJd4A/wlWQaQDNBPdS7jnAAMJK+ZiWdcp51C+kSa5dQ\nQt+H4ZZOp1RnQZybB1YIK4ypu/2T0wrv9UEfLt+sgSa6YjwhztqhMzptqSn4qflJ\ntvaupo5MomZwufteFplym0u6ZQKBgQDIEh9LXSsUqBqB8RWvuaCXvDiDYYsgNBSf\ncHAERjw1XEho0oTq2TLTf8zpql096IQH+QJAo+gnPKG4LZ9n4nk7YWMLwy7vVhfG\noUy71D0pc/dMDzSWnlbMfEBr43cd5wxdpRM6M2XYJ/YiamgJ/XOWTpp3uvroKRQ0\np8nX4kxZqwKBgAbtohfaTsyV4wpKTYPmP2AvAg0ohVTuPC76AqRDVrQL/1EXs0be\nuvOACrppJmPLGWR+yx5lehgKcm2fILdUJXgL4Uit9ndn2n4iHnAHrbsySRaz/HzY\nntNu42ptVxuVkVRT+/2/DUZ5ThESXNL2qd82udv9inhgKyV6Od/6hLrFAoGBAKk7\nQwNRhJ5Nb1aYoZppbuDKUhc3jCIqS4Nt7SKAcm9EZu9bmxi3rhlekerYs1QpeHzx\n8SjSPA3saHLNDHgoBhnnT4tkhy/lZ+kZCTob1bxZnkXU2svIlW0UcL2Rw3Ekvb38\nYt4pGa2UZ8tGrEg+/eWXCWvbWl7EWJYNk1srzR9PAoGASC2+WSM/eZEdSmwe4Kne\naDgxIw9xOPSxPLYzsrj8H7quitEHx4RkWh8l2aCOV6jNcOAmsqibUMkIbdPiUz8l\nTFXR+NkQDz/2snor6/8w3L4mm41O5EV8N1IwGmP7dvjFl3yFMjsoMvQxln5yegxv\nBqb4VJonE1jUFySpLcvkRWg=\n-----END PRIVATE KEY-----\n",
+  "client_email": "videobox@gmail-videobox.iam.gserviceaccount.com",
+  "client_id": "110778968764351449886",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/videobox%40gmail-videobox.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}

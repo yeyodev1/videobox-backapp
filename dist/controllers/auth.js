@@ -3,20 +3,22 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePasswordAndNotify = exports.authLoginController = exports.createAuthRegisterController = void 0;
+exports.passwordRecoveryRequestController = exports.updatePasswordAndNotify = exports.authLoginController = exports.createAuthRegisterController = void 0;
 const express_validator_1 = require("express-validator");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const handleErrors_1 = __importDefault(require("../utils/handleErrors"));
 const index_1 = __importDefault(require("../models/index"));
 const handleJwt_1 = require("../middlewares/handleJwt");
 const handleJwt_2 = require("../utils/handleJwt");
-// import { generatePasswordRecoveryTemplate } from '../emails/PasswordRecovery';
-// import { generatePasswordRecoveryNotificationTemplate } from '../emails/PasswordRecoveryNotification';
+const sendGrid_1 = require("../services/sendGrid");
+const EmailVerification_1 = require("../emails/EmailVerification");
+const PasswordRecovery_1 = require("../emails/PasswordRecovery");
+const PasswordRecoveryNotification_1 = require("../emails/PasswordRecoveryNotification");
 const JWT_SECRET = process.env.JWT_SECRET;
 async function createAuthRegisterController(req, res) {
     try {
         const { body } = req;
-        // const email = body.email;
+        const email = body.email;
         const encryptedPassword = await (0, handleJwt_1.encrypt)(body.password);
         const userData = { ...body, password: encryptedPassword };
         const newAuth = await index_1.default.users.create(userData);
@@ -30,6 +32,9 @@ async function createAuthRegisterController(req, res) {
             role,
             _id
         };
+        const link = `https://radiant-narwhal-d48ded.netlify.app/email-verified/${data.token}`;
+        const verificationBody = (0, EmailVerification_1.generateEmailVerificationTemplate)(link);
+        (0, sendGrid_1.sendEmail)(email, 'EMAIL DE VERIFICACIÓN', verificationBody);
         res.send({ data });
     }
     catch (error) {
@@ -82,30 +87,29 @@ async function authLoginController(req, res) {
     }
 }
 exports.authLoginController = authLoginController;
-// async function passwordRecoveryRequestController(
-//   req: Request,
-//   res: Response
-// ): Promise<void> {
-//   try {
-//     const email = req.body.email;
-//     const user = await models.users.findOne({ email: email });
-//     if (!user) {
-//       handleHttpError(res, 'User do not exist', 402);
-//       return;
-//     }
-//     const token = await tokenSign({
-//       role: user.role,
-//       _id: user.id
-//     });
-//     const link = `https://predix.ec/update-password/${token}`;
-//     const bodyEmail = generatePasswordRecoveryTemplate(link);
-//     sendEmail(user.email, 'RESTABLECER CONTRASEÑA', bodyEmail);
-//     res.send({ message: 'Request recover password' });
-//   } catch (error) {
-//     console.error(error);
-//     handleHttpError(res, 'Cannot create user', 401);
-//   }
-// }
+async function passwordRecoveryRequestController(req, res) {
+    try {
+        const email = req.body.email;
+        const user = await index_1.default.users.findOne({ email: email });
+        if (!user) {
+            (0, handleErrors_1.default)(res, 'User do not exist', 402);
+            return;
+        }
+        const token = await (0, handleJwt_2.tokenSign)({
+            role: user.role,
+            _id: user.id
+        });
+        const link = `https://radiant-narwhal-d48ded.netlify.app/update-password/${token}`;
+        const bodyEmail = (0, PasswordRecovery_1.generatePasswordRecoveryTemplate)(link);
+        (0, sendGrid_1.sendEmail)(user.email, 'RESTABLECER CONTRASEÑA', bodyEmail);
+        res.send({ message: 'Request recover password' });
+    }
+    catch (error) {
+        console.error(error);
+        (0, handleErrors_1.default)(res, 'Cannot create user', 401);
+    }
+}
+exports.passwordRecoveryRequestController = passwordRecoveryRequestController;
 async function updatePasswordAndNotify(req, res) {
     try {
         const decodedToken = jsonwebtoken_1.default.verify(req.body.id, JWT_SECRET);
@@ -125,8 +129,8 @@ async function updatePasswordAndNotify(req, res) {
                 password: encryptedPassword
             }
         });
-        // const bodyEmail = generatePasswordRecoveryNotificationTemplate();
-        // sendEmail(user.email, 'CONTRASEÑA RESTABLECIDA', bodyEmail);
+        const bodyEmail = (0, PasswordRecoveryNotification_1.generatePasswordRecoveryNotificationTemplate)();
+        (0, sendGrid_1.sendEmail)(user.email, 'CONTRASEÑA RESTABLECIDA', bodyEmail);
         res.send({ message: 'Password successfully updated' });
     }
     catch (error) {
