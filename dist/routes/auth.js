@@ -10,11 +10,7 @@ const router = express_1.default.Router();
 router.post('/auth/register', auth_1.authValidatorRegister, auth_2.createAuthRegisterController);
 router.post('/auth/login', auth_1.authValidatorlogin, auth_2.authLoginController);
 // TODO: set password recovery request
-// router.post(
-//   '/auth/password-recovery-request',
-//   authRecoverPasswordRequest,
-//   passwordRecoveryRequestController
-// );
+router.post('/auth/password-recovery-request', auth_1.authRecoverPasswordRequest, auth_2.passwordRecoveryRequestController);
 // TODO: update password
 router.patch('/auth/password-recovery', auth_1.authUpdatePassword, auth_2.updatePasswordAndNotify);
 exports.default = router;
