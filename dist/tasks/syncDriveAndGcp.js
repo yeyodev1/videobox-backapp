@@ -33,7 +33,7 @@ async function syncDriveToGcp() {
             };
             await index_1.default.padelVideos.create(fileData);
         }
-        // await driveManager.deleteAllFilesInFolder(folderId);
+        await driveManager.deleteAllFilesInFolder(folderId);
     }
     catch (error) {
         console.log(error);

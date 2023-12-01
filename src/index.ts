@@ -40,7 +40,7 @@ async function main() {
     console.log(`Server is running at http://localhost:${port}`);
   });
 
-  cron.schedule('*/15 * * * *', async () => {
+  cron.schedule('*/58 * * * *', async () => {
     // Coloca aquí el código que deseas ejecutar en el cron job
     await syncDriveToGcp(); // Llama a la función correspondiente
     console.log('Sincronización con drive y drive');
