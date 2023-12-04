@@ -1,5 +1,6 @@
 node_modules
 .env
+dist/
 # dist should be ingnored due to the compilation process, as node_modules
 # dist?
 
