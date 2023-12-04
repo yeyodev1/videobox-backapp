@@ -43,7 +43,7 @@ async function main() {
   });
 
   const folderId = 'Test Media Player';
-  await driveManager.deleteAllFilesInFolder(folderId);
+  // await driveManager.deleteAllFilesInFolder(folderId);
   cron.schedule('*/15 * * * *', async () => {
     // Coloca aquí el código que deseas ejecutar en el cron job
     // await syncDriveToGcp(); // Llama a la función correspondiente

@@ -17,7 +17,8 @@ export async function sendEmail(
   };
 
   try {
-    await sendgrid.send(messageData);
+    const response = await sendgrid.send(messageData);
+    console.log(response);
   } catch (error) {
     console.log(error);
   }
