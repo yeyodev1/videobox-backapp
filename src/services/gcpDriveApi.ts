@@ -12,14 +12,18 @@ class DriveVideoManager {
   constructor() {
     const credentialPaths = path.join(
       __dirname,
-      '../static/videobox-401504-b63bc5c2cea5.json'
+      '../static/videobox-bucket.json'
     );
     const credentials = this.loadCredentials(credentialPaths);
     this.auth = new google.auth.GoogleAuth({
       credentials,
       scopes: [
+        'https://www.googleapis.com/auth/docs',
         'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/drive.file'
+        'https://www.googleapis.com/auth/drive.file',
+        'https://www.googleapis.com/auth/drive.appdata',
+        'https://www.googleapis.com/auth/drive.metadata',
+        'https://www.googleapis.com/auth/drive.scripts'
       ]
     });
     this.drive = google.drive({ version: 'v3', auth: this.auth });
@@ -92,7 +96,9 @@ class DriveVideoManager {
       });
       // Borra cada archivo en la carpeta
       for (const file of files.data.files || []) {
-        await this.drive.files.delete({ fileId: file.id });
+        await this.drive.files.delete({
+          fileId: file.id
+        });
       }
       console.log(
         `Todos los archivos en la carpeta "${folderName}" han sido eliminados.`

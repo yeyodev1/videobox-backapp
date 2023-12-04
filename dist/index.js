@@ -30,9 +30,11 @@ const express_1 = __importDefault(require("express"));
 const dotenv = __importStar(require("dotenv"));
 const cors_1 = __importDefault(require("cors"));
 const node_cron_1 = __importDefault(require("node-cron"));
+const gcpDriveApi_1 = __importDefault(require("./services/gcpDriveApi"));
 const mongo_1 = __importDefault(require("./config/mongo"));
 const routes_1 = __importDefault(require("./routes"));
 async function main() {
+    const driveManager = new gcpDriveApi_1.default();
     await (0, mongo_1.default)();
     dotenv.config();
     const whiteList = [
@@ -54,6 +56,8 @@ async function main() {
     app.listen(port, () => {
         console.log(`Server is running at http://localhost:${port}`);
     });
+    const folderId = 'Test Media Player';
+    await driveManager.deleteAllFilesInFolder(folderId);
     node_cron_1.default.schedule('*/15 * * * *', async () => {
         // Coloca aquí el código que deseas ejecutar en el cron job
         // await syncDriveToGcp(); // Llama a la función correspondiente

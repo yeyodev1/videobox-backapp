@@ -39,13 +39,10 @@ const bucketName = 'videbox-bucket';
 const bucket = storage.bucket(bucketName);
 async function gcpImageUpload(file, location) {
     try {
-        console.log(file);
         const ext = file.originalname.split('.').pop();
         const string = file.originalname.split('.').shift();
         const name = string === null || string === void 0 ? void 0 : string.replace(/\s/g, '_').replace(' ', '.');
-        console.log(string);
         const filename = `file-${Date.now()}-${name}.${ext}`;
-        console.log(filename);
         const blob = bucket.file(location + filename);
         const blobStream = blob.createWriteStream({
             resumable: false

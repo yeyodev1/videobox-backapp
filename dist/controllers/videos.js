@@ -24,7 +24,6 @@ async function getVideos(_req, res) {
         //   createdAt: { $gte: sevenDaysAgo }
         // });
         const videos = await index_1.default.padelVideos.find({});
-        console.log(videos);
         res.send({ data: videos });
     }
     catch (error) {
@@ -40,7 +39,6 @@ async function getAdminVideos(_req, res) {
         //   createdAt: { $gte: sevenDaysAgo }
         // });
         const videos = await index_1.default.padelVideos.find({});
-        console.log(videos);
         res.send({ data: videos });
     }
     catch (error) {
@@ -138,7 +136,6 @@ async function processVideoCut(startTime, endTime, videoId, taskId) {
                 return;
             }
             const publicUrl = await (0, gcpVideoUpload_1.uploadVideoToGCS)(outputPath);
-            console.log(outputPath);
             fs_1.default.unlinkSync(outputPath);
             await videoTask_1.default.updateOne({ taskId }, { status: 'completed', url: publicUrl });
         });

@@ -23,7 +23,6 @@ async function getVideos(_req: Request, res: Response) {
     //   createdAt: { $gte: sevenDaysAgo }
     // });
     const videos = await models.padelVideos.find({});
-    console.log(videos);
 
     res.send({ data: videos });
   } catch (error) {
@@ -41,7 +40,6 @@ async function getAdminVideos(_req: Request, res: Response) {
     //   createdAt: { $gte: sevenDaysAgo }
     // });
     const videos = await models.padelVideos.find({});
-    console.log(videos);
 
     res.send({ data: videos });
   } catch (error) {
@@ -158,7 +156,6 @@ async function processVideoCut(
         return;
       }
       const publicUrl = await uploadVideoToGCS(outputPath);
-      console.log(outputPath);
       fs.unlinkSync(outputPath);
       await videoTask.updateOne(
         { taskId },

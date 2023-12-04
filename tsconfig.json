@@ -106,5 +106,5 @@
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
   },
-  "include": ["src/static/videobox-401504-b63bc5c2cea5.json", "src/**/*.ts"]
+  "include": ["src/static/videobox-401504-b63bc5c2cea5.json", "src/static/videobox.json", "src/static/videobox-bucket.json", "src/**/*.ts"]
 }

@@ -38,7 +38,7 @@ const storage = new storage_1.Storage({
     projectId: process.env.BUCKET_PROJECT_ID,
     credentials: {
         client_email: process.env.BUCKET_CLIENT_EMAIL,
-        private_key: (_a = process.env.BUCKET_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, "\n"),
+        private_key: (_a = process.env.BUCKET_PRIVATE_KEY) === null || _a === void 0 ? void 0 : _a.replace(/\\n/g, '\n')
     }
 });
 const bucketName = 'videbox-bucket';
@@ -49,7 +49,6 @@ async function gcpVideoUpload(stream, filename) {
         const blobStream = blob.createWriteStream({
             resumable: false
         });
-        console.log(filename);
         const publicUrl = await new Promise((resolve, reject) => {
             blobStream
                 .on('error', (error) => {

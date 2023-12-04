@@ -10,7 +10,7 @@ const storage = new Storage({
   projectId: process.env.BUCKET_PROJECT_ID,
   credentials: {
     client_email: process.env.BUCKET_CLIENT_EMAIL,
-    private_key: process.env.BUCKET_PRIVATE_KEY?.replace(/\\n/g, "\n"),
+    private_key: process.env.BUCKET_PRIVATE_KEY?.replace(/\\n/g, '\n')
   }
 });
 
@@ -26,7 +26,6 @@ async function gcpVideoUpload(
     const blobStream = blob.createWriteStream({
       resumable: false
     });
-    console.log(filename);
 
     const publicUrl: string = await new Promise((resolve, reject) => {
       blobStream
