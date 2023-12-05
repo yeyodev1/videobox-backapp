@@ -10,7 +10,8 @@ import {
   createAuthRegisterController,
   authLoginController,
   updatePasswordAndNotify,
-  passwordRecoveryRequestController
+  passwordRecoveryRequestController,
+  verifyEmailController,
 } from '../controllers/auth';
 
 const router = express.Router();
@@ -36,5 +37,7 @@ router.patch(
   authUpdatePassword,
   updatePasswordAndNotify
 );
+
+router.patch('/auth/verify-email/:token', verifyEmailController);
 
 export default router;

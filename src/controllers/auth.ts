@@ -96,6 +96,24 @@ async function authLoginController(req: Request, res: Response) {
   }
 }
 
+
+async function verifyEmailController (req: Request, res: Response) {
+  try {
+    const { token } = req.params;
+
+    const decoded = jwt.verify(token, JWT_SECRET) ;
+
+    await models.users.findByIdAndUpdate(decoded._id, {
+      $set: { emailVerified: true }
+    });
+
+    res.send({ message: 'Email successfully verified' });
+  } catch (error) {
+    console.error(error);
+    handleHttpError(res, 'Error verifying email', 401);
+  }
+};
+
 async function passwordRecoveryRequestController(
   req: Request,
   res: Response
@@ -171,5 +189,6 @@ export {
   createAuthRegisterController,
   authLoginController,
   updatePasswordAndNotify,
-  passwordRecoveryRequestController
+  passwordRecoveryRequestController,
+  verifyEmailController
 };
