@@ -97,22 +97,37 @@ async function authLoginController(req: Request, res: Response) {
 }
 
 
-async function verifyEmailController (req: Request, res: Response) {
+async function emailVerificationController(req: Request, res: Response) {
   try {
-    const { token } = req.params;
+    const decodedToken = jwt.verify(req.body.id, JWT_SECRET!) as
+      | { _id: string }
+      | undefined;
 
-    const decoded = jwt.verify(token, JWT_SECRET) ;
+    if (!decodedToken?._id) {
+      handleHttpError(res, 'CANNOT GET ID', 402);
+    }
 
-    await models.users.findByIdAndUpdate(decoded._id, {
-      $set: { emailVerified: true }
+    const id = decodedToken?._id;
+
+    const user = await models.users.findById(id);
+
+    if (!user) {
+      handleHttpError(res, 'User do not exist', 402);
+      return;
+    }
+
+    await models.users.findByIdAndUpdate(id, {
+      $set: {
+        emailVerified: true
+      }
     });
 
-    res.send({ message: 'Email successfully verified' });
+    res.send({ message: 'User verified' });
   } catch (error) {
-    console.error(error);
-    handleHttpError(res, 'Error verifying email', 401);
+    handleHttpError(res, 'Cannot verify user', 401);
+    console.log(error)
   }
-};
+}
 
 async function passwordRecoveryRequestController(
   req: Request,
@@ -190,5 +205,5 @@ export {
   authLoginController,
   updatePasswordAndNotify,
   passwordRecoveryRequestController,
-  verifyEmailController
+  emailVerificationController,
 };
