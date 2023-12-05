@@ -57,6 +57,11 @@ const usersSchema: Schema = new mongoose.Schema(
       type: Boolean,
       default: false
     },
+    
+    emailVerified: {
+      type: Boolean,
+      default: false
+    },
 
     videos: [
       {
