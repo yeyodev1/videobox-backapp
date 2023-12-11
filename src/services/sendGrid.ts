@@ -11,14 +11,13 @@ export async function sendEmail(
 ): Promise<void> {
   const messageData: EmailMessage = {
     to: email,
-    from: 'lreyes@nabux.ec',
+    from: 'rodrigo.sportsmedia@gmail.com',
     subject: subject,
     html: body
   };
 
   try {
-    const response = await sendgrid.send(messageData);
-    console.log(response);
+    await sendgrid.send(messageData);
   } catch (error) {
     console.log(error);
   }
