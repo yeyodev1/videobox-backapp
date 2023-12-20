@@ -2,6 +2,7 @@ import express from 'express';
 
 import {
   getVideos,
+  getAdminVideos,
   uploadPadelVideo,
   relateUserWithVideo,
   cutVideo,
@@ -12,6 +13,8 @@ import uploadMiddleware from '../middlewares/handleImage';
 const router = express.Router();
 
 router.get('/videos', getVideos);
+
+router.get('/admin-videos', getAdminVideos);
 
 router.post(
   '/upload-video',
