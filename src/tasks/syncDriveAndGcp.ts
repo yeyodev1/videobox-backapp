@@ -37,7 +37,7 @@ async function syncDriveToGcp(): Promise<void> {
       await models.padelVideos.create(fileData);
     }
 
-    await driveManager.deleteAllFilesInFolder(folderId);
+    await driveManager.deleteFolder('Test Media Player');
   } catch (error) {
     console.log(error);
   }

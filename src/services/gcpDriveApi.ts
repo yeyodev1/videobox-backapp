@@ -1,18 +1,16 @@
 import { google, Auth } from 'googleapis';
 import * as fs from 'fs';
-import { promisify } from 'util';
 import path from 'path';
-
-const readFileAsync = promisify(fs.readFile);
 
 class DriveVideoManager {
   private auth: Auth.GoogleAuth;
   private drive: any;
 
   constructor() {
+    // this.initDrive();
     const credentialPaths = path.join(
       __dirname,
-      '../static/videobox-bucket.json'
+      '../static/videobox-credentials.json'
     );
     const credentials = this.loadCredentials(credentialPaths);
     this.auth = new google.auth.GoogleAuth({
@@ -20,10 +18,7 @@ class DriveVideoManager {
       scopes: [
         'https://www.googleapis.com/auth/docs',
         'https://www.googleapis.com/auth/drive',
-        'https://www.googleapis.com/auth/drive.file',
-        'https://www.googleapis.com/auth/drive.appdata',
-        'https://www.googleapis.com/auth/drive.metadata',
-        'https://www.googleapis.com/auth/drive.scripts'
+        'https://www.googleapis.com/auth/drive.file'
       ]
     });
     this.drive = google.drive({ version: 'v3', auth: this.auth });
@@ -47,7 +42,9 @@ class DriveVideoManager {
     try {
       const folder = await this.findFolderByName(folderName);
       if (!folder) {
-        throw new Error(`No se encontró la carpeta con el nombre: ${folderName}`);
+        throw new Error(
+          `No se encontró la carpeta con el nombre: ${folderName}`
+        );
       }
       const videos = await this.drive.files.list({
         q: `'${folder.id}' in parents and mimeType contains 'video/'`,
@@ -62,7 +59,9 @@ class DriveVideoManager {
       }));
       return directLinks;
     } catch (error: any) {
-      throw new Error('Error al obtener los enlaces de descarga: ' + error.message);
+      throw new Error(
+        'Error al obtener los enlaces de descarga: ' + error.message
+      );
     }
   }
 
@@ -81,7 +80,28 @@ class DriveVideoManager {
     }
   }
 
-  async deleteAllFilesInFolder(folderName: string): Promise<void> {
+  async createFolder(
+    folderName: string,
+    parentFolderId = '1zONUZ6CBZIWiv8TUF0hKDkIBhOC9DGSb'
+  ) {
+    try {
+      const fileMetadata = {
+        name: folderName,
+        mimeType: 'application/vnd.google-apps.folder',
+        parents: [parentFolderId]
+      };
+      const folder = await this.drive.files.create({
+        resource: fileMetadata,
+        fields: 'id'
+      });
+      return folder.data.id;
+    } catch (error) {
+      console.error('Error creating folder:', error);
+      throw error;
+    }
+  }
+
+  async deleteFolder(folderName: string): Promise<void> {
     try {
       const folder = await this.findFolderByName(folderName);
       if (!folder) {
@@ -89,20 +109,9 @@ class DriveVideoManager {
           `No se encontró la carpeta con el nombre: ${folderName}`
         );
       }
-      // Obtiene una lista de todos los archivos en la carpeta
-      const files = await this.drive.files.list({
-        q: `'${folder.id}' in parents`,
-        fields: 'files(id)'
-      });
-      // Borra cada archivo en la carpeta
-      for (const file of files.data.files || []) {
-        await this.drive.files.delete({
-          fileId: file.id
-        });
-      }
-      console.log(
-        `Todos los archivos en la carpeta "${folderName}" han sido eliminados.`
-      );
+
+      await this.drive.files.delete({ fileId: folder.id });
+      await this.createFolder('Test Media Player Back');
     } catch (error: any) {
       throw new Error(
         'Error al eliminar los archivos de la carpeta: ' + error.message

@@ -2,7 +2,6 @@ import { Request, Response } from 'express';
 // import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import path from 'path';
-// import { tmpdir } from 'os';
 
 import gcpImageUpload from '../services/gcpImageUpload';
 import handleHttpError from '../utils/handleErrors';

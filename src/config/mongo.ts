@@ -19,7 +19,7 @@ async function dbConnect(): Promise<void> {
     }
 
     await mongoose.connect(DB_URI);
-    console.log('*** CONEXION CORRECTA ***');
+    console.log('*** BASE DE DATOS CON CONEXION CORRECTA ***');
   } catch (error) {
     console.log('*** ERROR DE CONEXION ***', error);
   }

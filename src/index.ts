@@ -4,13 +4,11 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 import cron from 'node-cron';
 
-import DriveVideoManager from './services/gcpDriveApi';
 import syncDriveToGcp from './tasks/syncDriveAndGcp';
 import dbConnect from './config/mongo';
 import routerApi from './routes';
 
 async function main() {
-  const driveManager = new DriveVideoManager();
   await dbConnect();
 
   dotenv.config();
@@ -42,11 +40,9 @@ async function main() {
     console.log(`Server is running at http://localhost:${port}`);
   });
 
-  const folderId = 'Test Media Player';
-  // await driveManager.deleteAllFilesInFolder(folderId);
   cron.schedule('*/15 * * * *', async () => {
     // Coloca aquí el código que deseas ejecutar en el cron job
-    // await syncDriveToGcp(); // Llama a la función correspondiente
+    await syncDriveToGcp(); // Llama a la función correspondiente
     console.log('Sincronización con drive y drive');
   });
 }
