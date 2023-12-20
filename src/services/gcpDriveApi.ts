@@ -7,7 +7,6 @@ class DriveVideoManager {
   private drive: any;
 
   constructor() {
-    // this.initDrive();
     const credentialPaths = path.join(
       __dirname,
       '../static/videobox-credentials.json'
@@ -111,7 +110,7 @@ class DriveVideoManager {
       }
 
       await this.drive.files.delete({ fileId: folder.id });
-      await this.createFolder('Test Media Player Back');
+      await this.createFolder('Test Media Player');
     } catch (error: any) {
       throw new Error(
         'Error al eliminar los archivos de la carpeta: ' + error.message
