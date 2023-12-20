@@ -34,7 +34,7 @@ async function createAuthRegisterController(req: Request, res: Response) {
       _id
     };
 
-    const link = `https://radiant-narwhal-d48ded.netlify.app/email-verified/${data.token}`;
+    const link = `https://videobox.pe/email-verified/${data.token}`;
 
     const verificationBody = generateEmailVerificationTemplate(link);
 
@@ -96,7 +96,6 @@ async function authLoginController(req: Request, res: Response) {
   }
 }
 
-
 async function emailVerificationController(req: Request, res: Response) {
   try {
     const decodedToken = jwt.verify(req.body.id, JWT_SECRET!) as
@@ -125,7 +124,7 @@ async function emailVerificationController(req: Request, res: Response) {
     res.send({ message: 'User verified' });
   } catch (error) {
     handleHttpError(res, 'Cannot verify user', 401);
-    console.log(error)
+    console.log(error);
   }
 }
 
@@ -147,7 +146,7 @@ async function passwordRecoveryRequestController(
       _id: user.id
     });
 
-    const link = `https://radiant-narwhal-d48ded.netlify.app/update-password/${token}`;
+    const link = `https://videobox.pe/update-password/${token}`;
 
     const bodyEmail = generatePasswordRecoveryTemplate(link);
 
@@ -205,5 +204,5 @@ export {
   authLoginController,
   updatePasswordAndNotify,
   passwordRecoveryRequestController,
-  emailVerificationController,
+  emailVerificationController
 };
