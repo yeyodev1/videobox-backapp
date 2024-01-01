@@ -1,5 +1,4 @@
 import { Request, Response } from 'express';
-// import ffmpeg from 'fluent-ffmpeg';
 import fs from 'fs';
 import path from 'path';
 
@@ -10,13 +9,12 @@ import { addPrefixUrl } from '../utils/handleImageUrl';
 import { uploadVideoToGCS } from '../services/gcpVideoUpload';
 import { spawn } from 'child_process';
 import videoTask from '../models/videoTask';
-// import { publicEncrypt } from 'crypto';
 
 async function getVideos(_req: Request, res: Response) {
   try {
     const now = new Date();
 
-    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const sevenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
 
     const videos = await models.padelVideos.find({
       createdAt: { $gte: sevenDaysAgo }
