@@ -35,11 +35,11 @@ async function syncDriveToGcp(): Promise<void> {
           responseType: 'stream'
         })
 
-        // const publicUrl = await gcpVideoUpload(response.data, gcsLocation)
+        const publicUrl = await gcpVideoUpload(response.data, gcsLocation)
 
         const fileData = {
           name: videoName,
-          // url: publicUrl,
+          url: publicUrl,
           fileId: videoLink.directLink
         };
 
