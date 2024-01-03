@@ -17,26 +17,35 @@ async function syncDriveToGcp(): Promise<void> {
     }
 
     for (const videoLink of videoLinks) {
-      const videoDownloadLink = `https://www.googleapis.com/drive/v3/files/${videoLink.directLink}?alt=media`;
-      const videoName = videoLink.name;
-      const gcsLocation = gcsBucketFoler + videoName;
-
-      const response = await axios.get(videoDownloadLink, {
-        headers: { Authorization: `Bearer ${accessToken.token}` },
-        responseType: 'stream'
+      const fileInfo = await axios.get (`https://www.googleapis.com/drive/v3/files/${videoLink.directLink}`, {
+        params: { fields: 'size' },
+        headers: { Authorization: `Bearer ${accessToken.token}`}
       });
+      
+      const fileSize = fileInfo.data.size;
+      const fileSizeMb = fileSize / (1024 * 1024);
 
-      const publicUrl = await gcpVideoUpload(response.data, gcsLocation);
+      if (fileSizeMb > 5) {
+        const videoDownloadLink = `https://www.googleapis.com/drive/v3/files/${videoLink.directLink}?alt=media`;
+        const videoName = videoLink.name;
+        const gcsLocation = gcsBucketFoler + videoName;
 
-      const fileData = {
-        name: videoName,
-        url: publicUrl,
-        fileId: videoLink.directLink
-      };
+        const response = await axios.get(videoDownloadLink, {
+          headers: { Authorization: `Bearer ${accessToken.token}`},
+          responseType: 'stream'
+        })
 
-      await models.padelVideos.create(fileData);
+        // const publicUrl = await gcpVideoUpload(response.data, gcsLocation)
+
+        const fileData = {
+          name: videoName,
+          // url: publicUrl,
+          fileId: videoLink.directLink
+        };
+
+        await models.padelVideos.create(fileData);
+      }
     }
-
     await driveManager.deleteFolder('Test Media Player');
   } catch (error) {
     console.log(error);
