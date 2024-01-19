@@ -14,10 +14,10 @@ async function getVideos(_req: Request, res: Response) {
   try {
     const now = new Date();
 
-    const fourteenDaysAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000);
+    const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000);
 
     const videos = await models.padelVideos.find({
-      createdAt: { $gte: fourteenDaysAgo }
+      createdAt: { $gte: sevenDaysAgo }
     });
 
     res.send({ data: videos });
