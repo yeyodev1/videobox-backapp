@@ -17,6 +17,7 @@ const storage = new Storage({
 const bucketName = 'videbox-bucket';
 const bucket = storage.bucket(bucketName);
 
+
 async function gcpVideoUpload(
   stream: NodeJS.ReadableStream,
   filename: string
@@ -69,8 +70,22 @@ async function uploadVideoToGCS(filePath: string): Promise<string> {
     });
     createReadStream(filePath).pipe(blobStream);
   });
-    
-
 }
 
-export { gcpVideoUpload, uploadVideoToGCS };
+async function deleteCutVideosFromBucket(): Promise<void> {
+  try {
+    const [files] = await bucket.getFiles();
+    console.log('get filesss', files)
+    const cutVideos = files.filter(file => file.name.startsWith('cut'));
+
+    for (const file of cutVideos) {
+      await file.delete();
+      console.log(`Video ${file.name} eliminado del bucket ${bucketName}.`);
+    }
+  } catch (error) {
+    console.error('Error al eliminar los videos del bucket:', error);
+    throw error;
+  }
+}
+
+export { gcpVideoUpload, uploadVideoToGCS, deleteCutVideosFromBucket };

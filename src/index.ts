@@ -7,6 +7,7 @@ import cron from 'node-cron';
 import syncDriveToGcp from './tasks/syncDriveAndGcp';
 import dbConnect from './config/mongo';
 import routerApi from './routes';
+import { deleteCutVideosFromBucket } from './services/gcpVideoUpload';
 
 async function main() {
   await dbConnect();
@@ -43,6 +44,11 @@ async function main() {
     // Coloca aquí el código que deseas ejecutar en el cron job
     await syncDriveToGcp(); // Llama a la función correspondiente
     console.log('Sincronización con drive y drive');
+  });
+
+  cron.schedule('*/10 * * * * *', async () => {
+    await deleteCutVideosFromBucket();
+    console.log('Videos eliminados del bucket');
   });
 }
 
