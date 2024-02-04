@@ -46,7 +46,7 @@ async function main() {
     console.log('Sincronización con drive y drive');
   });
 
-  cron.schedule('*/10 * * * * *', async () => {
+  cron.schedule('0 3 * * *', async () => {
     await deleteCutVideosFromBucket();
     console.log('Videos eliminados del bucket');
   });

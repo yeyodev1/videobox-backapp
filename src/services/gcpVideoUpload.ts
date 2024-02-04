@@ -17,7 +17,6 @@ const storage = new Storage({
 const bucketName = 'videbox-bucket';
 const bucket = storage.bucket(bucketName);
 
-
 async function gcpVideoUpload(
   stream: NodeJS.ReadableStream,
   filename: string
@@ -66,7 +65,7 @@ async function uploadVideoToGCS(filePath: string): Promise<string> {
 
     blobStream.on('finish', () => {
       const publicUrl = `https://storage.googleapis.com/${bucket.name}/${filename}`;
-      resolve(publicUrl)
+      resolve(publicUrl);
     });
     createReadStream(filePath).pipe(blobStream);
   });
@@ -75,8 +74,9 @@ async function uploadVideoToGCS(filePath: string): Promise<string> {
 async function deleteCutVideosFromBucket(): Promise<void> {
   try {
     const [files] = await bucket.getFiles();
-    console.log('get filesss', files);
     const cutVideos = files.filter((file) => file.name.startsWith('cut'));
+
+    console.log('cutVideos', cutVideos);
 
     for (const file of cutVideos) {
       await file.delete();
