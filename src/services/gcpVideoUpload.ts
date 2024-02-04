@@ -75,8 +75,8 @@ async function uploadVideoToGCS(filePath: string): Promise<string> {
 async function deleteCutVideosFromBucket(): Promise<void> {
   try {
     const [files] = await bucket.getFiles();
-    console.log('get filesss', files)
-    const cutVideos = files.filter(file => file.name.startsWith('cut'));
+    console.log('get filesss', files);
+    const cutVideos = files.filter((file) => file.name.startsWith('cut'));
 
     for (const file of cutVideos) {
       await file.delete();
