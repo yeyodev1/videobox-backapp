@@ -7,7 +7,10 @@ import cron from 'node-cron';
 import syncDriveToGcp from './tasks/syncDriveAndGcp';
 import dbConnect from './config/mongo';
 import routerApi from './routes';
-import { deleteCutVideosFromBucket, deleteOldVideos } from './services/gcpVideoUpload';
+import {
+  deleteCutVideosFromBucket,
+  deleteOldVideos
+} from './services/gcpVideoUpload';
 
 async function main() {
   await dbConnect();
@@ -53,7 +56,7 @@ async function main() {
   });
 
   // trigger delete unsued videos from bucket at 4 am
-  cron.schedule('*/5 * * * *', async () => {
+  cron.schedule('0 4 * * *', async () => {
     await deleteOldVideos();
     console.log('Videos eliminados del bucket');
   });

@@ -99,13 +99,9 @@ async function deleteOldVideos() {
   // Obtener archivos del bucket
   const [files] = await storage.bucket(bucketName).getFiles();
 
-  console.log(files.length, 'archivos encontrados');
-  let counter = 0
-
   for (const file of files) {
-    const isOlderThan8Days = new Date(file.metadata.timeCreated) < eightDaysAgo;
-
-    console.log('isOlderThan8Days', isOlderThan8Days);
+    const isOlderThan8Days =
+      new Date(file.metadata.timeCreated!) < eightDaysAgo;
 
     if (isOlderThan8Days) {
       // Asegúrate de que la URL en file.metadata corresponda a la estructura que tienes en la DB
@@ -120,12 +116,9 @@ async function deleteOldVideos() {
         // Si no está asociado, eliminar el archivo
         await file.delete();
         console.log(`Archivo eliminado: ${file.name}`);
-        counter++;
       }
     }
   }
-  console.log('counter', counter);
-  return
 }
 
 export {
