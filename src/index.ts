@@ -11,6 +11,7 @@ import {
   deleteCutVideosFromBucket,
   deleteOldVideos
 } from './services/gcpVideoUpload';
+import { clearCollections } from './tasks/clearCollections';
 
 async function main() {
   await dbConnect();
@@ -58,6 +59,7 @@ async function main() {
   // trigger delete unsued videos from bucket at 4 am
   cron.schedule('0 4 * * *', async () => {
     await deleteOldVideos();
+    await clearCollections();
     console.log('Videos eliminados del bucket');
   });
 }
