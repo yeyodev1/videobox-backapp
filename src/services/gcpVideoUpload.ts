@@ -4,6 +4,8 @@ import * as dotenv from 'dotenv';
 import path from 'path';
 import { createReadStream } from 'fs';
 
+import models from '../models/index';
+
 dotenv.config();
 
 const storage = new Storage({
@@ -79,7 +81,8 @@ async function deleteCutVideosFromBucket(): Promise<void> {
     console.log('cutVideos', cutVideos);
 
     for (const file of cutVideos) {
-      await file.delete();
+      console.log(file.name);
+      // await file.delete();
       console.log(`Video ${file.name} eliminado del bucket ${bucketName}.`);
     }
   } catch (error) {
@@ -88,4 +91,46 @@ async function deleteCutVideosFromBucket(): Promise<void> {
   }
 }
 
-export { gcpVideoUpload, uploadVideoToGCS, deleteCutVideosFromBucket };
+async function deleteOldVideos() {
+  // Obtener la fecha límite (8 días atrás)
+  const eightDaysAgo = new Date();
+  eightDaysAgo.setDate(eightDaysAgo.getDate() - 8);
+
+  // Obtener archivos del bucket
+  const [files] = await storage.bucket(bucketName).getFiles();
+
+  console.log(files.length, 'archivos encontrados');
+  let counter = 0
+
+  for (const file of files) {
+    const isOlderThan8Days = new Date(file.metadata.timeCreated) < eightDaysAgo;
+
+    console.log('isOlderThan8Days', isOlderThan8Days);
+
+    if (isOlderThan8Days) {
+      // Asegúrate de que la URL en file.metadata corresponda a la estructura que tienes en la DB
+      const fileName = file.name; // Reemplazar con la propiedad correcta si es necesario
+
+      // Verificar si el video está asociado a un usuario por nombre de archivo
+      const isAssociatedWithUser = await models.users
+        .findOne({ 'videos.name': fileName })
+        .exec();
+
+      if (!isAssociatedWithUser) {
+        // Si no está asociado, eliminar el archivo
+        await file.delete();
+        console.log(`Archivo eliminado: ${file.name}`);
+        counter++;
+      }
+    }
+  }
+  console.log('counter', counter);
+  return
+}
+
+export {
+  gcpVideoUpload,
+  uploadVideoToGCS,
+  deleteCutVideosFromBucket,
+  deleteOldVideos
+};
