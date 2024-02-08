@@ -6,7 +6,6 @@ export async function clearCollections() {
     monthAgo.setMonth(monthAgo.getMonth() - 1);
 
     await models.videoTask.deleteMany({});
-    await models.padelVideos.deleteMany({ createdAt: { $lt: monthAgo } });
   } catch (error) {
     console.error('Error cleaning collections: ', error);
   }
